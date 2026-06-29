@@ -492,6 +492,7 @@
 
     .effect-card:nth-child(1) {
       grid-column: span 7;
+      background: #000;
     }
 
     .effect-card:nth-child(2) {
@@ -1377,10 +1378,18 @@
       const bgColor = hexToRgb("#000000");
       const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
 
+      function clamp(value, min, max) {
+        return Math.max(min, Math.min(max, value));
+      }
+
       function updateMouse(event) {
         const rect = canvas.getBoundingClientRect();
-        mouse.tx = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-        mouse.ty = -(((event.clientY - rect.top) / rect.height) * 2 - 1);
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const reachX = Math.max(window.innerWidth * 0.38, rect.width * 2.2);
+        const reachY = Math.max(window.innerHeight * 0.42, rect.height * 2.4);
+        mouse.tx = clamp((event.clientX - centerX) / reachX, -1.15, 1.15);
+        mouse.ty = clamp(-(event.clientY - centerY) / reachY, -1.15, 1.15);
       }
 
       function resetMouse() {
@@ -1396,8 +1405,8 @@
         gl.viewport(0, 0, canvas.width, canvas.height);
       }
 
-      host.addEventListener("pointermove", updateMouse);
-      host.addEventListener("pointerleave", resetMouse);
+      document.addEventListener("pointermove", updateMouse);
+      document.addEventListener("pointerleave", resetMouse);
       window.addEventListener("resize", resizeEyeCanvas);
       resizeEyeCanvas();
 
