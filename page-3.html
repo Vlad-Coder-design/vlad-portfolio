@@ -98,6 +98,94 @@
       letter-spacing: -0.04em;
     }
 
+    .brand-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0;
+    }
+
+    .donate-link {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--accent);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      overflow: hidden;
+      isolation: isolate;
+      transition: color 180ms ease, border-color 180ms ease, background 180ms ease, transform 180ms ease;
+    }
+
+    @keyframes star-movement-top {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(100%); opacity: 0; }
+    }
+
+    @keyframes star-movement-bottom {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(-100%); opacity: 0; }
+    }
+
+    .donate-link::before,
+    .donate-link::after {
+      content: "";
+      position: absolute;
+      z-index: -2;
+      inset: -140%;
+      background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        transparent 72deg,
+        rgba(127, 255, 100, 0.95) 112deg,
+        transparent 152deg,
+        transparent 232deg,
+        rgba(127, 255, 100, 0.8) 272deg,
+        transparent 312deg,
+        transparent 360deg
+      );
+      animation: orbit-border-spin 3.8s linear infinite;
+      pointer-events: none;
+    }
+
+    .donate-link::after {
+      display: none;
+    }
+
+    @keyframes orbit-border-spin {
+      to { transform: rotate(1turn); }
+    }
+
+    .donate-link span {
+      position: relative;
+      z-index: 1;
+      display: block;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(13, 13, 16, 0.96);
+      transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+
+    .donate-link:hover,
+    .donate-link:focus-visible {
+      color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .donate-link:hover span,
+    .donate-link:focus-visible span {
+      border-color: var(--accent);
+      background: rgba(127, 255, 100, 0.08);
+    }
+
     .logo span,
     .prompt,
     .section-label {
@@ -163,6 +251,59 @@
     .nav-extra-link:hover,
     .nav-extra-link:focus-visible {
       color: var(--accent);
+    }
+
+    .magnet-link {
+      display: inline-flex;
+      will-change: transform;
+      transition: color 180ms ease, transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .effects-orbit-link {
+      position: relative;
+      padding: 0;
+      overflow: visible;
+    }
+
+    .effects-orbit-link::before,
+    .effects-orbit-link::after {
+      display: none;
+    }
+
+    .effects-svg {
+      width: 74px;
+      height: 18px;
+      display: block;
+      overflow: visible;
+    }
+
+    .effects-fill,
+    .effects-stroke {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0;
+      dominant-baseline: middle;
+    }
+
+    .effects-fill {
+      fill: rgba(184, 184, 191, 0.66);
+    }
+
+    .effects-stroke {
+      fill: transparent;
+      stroke: var(--accent);
+      stroke-width: 0.85;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 12 34;
+      stroke-dashoffset: 0;
+      filter: drop-shadow(0 0 5px rgba(127, 255, 100, 0.75));
+      animation: effects-letter-line 1.25s linear infinite;
+    }
+
+    @keyframes effects-letter-line {
+      to { stroke-dashoffset: -46; }
     }
 
     .language-button {
@@ -662,13 +803,16 @@
 <body>
   <header class="site-header">
     <nav class="nav container" aria-label="Основна навігація">
-      <a class="logo" href="index.html" aria-label="На головну">vlad<span>.dev</span></a>
+      <div class="brand-actions">
+        <a class="logo" href="index.html" aria-label="На головну">vlad<span>.dev</span></a>
+        <a class="donate-link magnet-link" href="https://send.monobank.ua/jar/7gPgzAQqky" target="_blank" rel="noopener noreferrer" data-magnet><span>донат</span></a>
+      </div>
       <div class="page-switcher header-page-switcher" aria-label="Перемикач сторінок">
         <a class="pill-page" href="index.html" aria-label="Відкрити першу сторінку">01</a>
         <a class="pill-page" href="page-2.html" aria-label="Відкрити другу сторінку">02</a>
         <span class="pill-page pill-page-current" aria-current="page">03</span>
       </div>
-      <a class="nav-extra-link" href="page-4.html">./effects</a>
+      <a class="nav-extra-link magnet-link effects-orbit-link" href="page-4.html" data-magnet aria-label="./effects"><svg class="effects-svg" viewBox="0 0 74 18" aria-hidden="true"><text class="effects-fill" x="0" y="9">./effects</text><text class="effects-stroke" x="0" y="9">./effects</text></svg></a>
       <div class="language-switcher" aria-label="Перемикач мови">
         <button class="language-button active" type="button" data-language="uk" aria-pressed="true">UA</button>
         <button class="language-button" type="button" data-language="en" aria-pressed="false">EN</button>
@@ -1164,6 +1308,39 @@
       footerDock.addEventListener("pointercancel", resetFooterDock);
     }
 
+    function initMagnetLinks() {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+      const magnetLinks = [...document.querySelectorAll("[data-magnet]")];
+      const magnetRadius = 500;
+      const magnetStrengthX = 0.163;
+      const magnetStrengthY = 0.202;
+
+      window.addEventListener("pointermove", (event) => {
+        magnetLinks.forEach((link) => {
+          const rect = link.getBoundingClientRect();
+          const x = event.clientX - (rect.left + rect.width / 2);
+          const y = event.clientY - (rect.top + rect.height / 2);
+          const distance = Math.hypot(x, y);
+          const pull = Math.max(0, 1 - distance / magnetRadius);
+
+          if (pull === 0) {
+            link.style.transform = "translate3d(0, 0, 0)";
+            return;
+          }
+
+          link.style.transform = `translate3d(${x * magnetStrengthX * pull}px, ${y * magnetStrengthY * pull}px, 0)`;
+        });
+      });
+
+      window.addEventListener("pointerleave", () => {
+        magnetLinks.forEach((link) => {
+          link.style.transform = "translate3d(0, 0, 0)";
+        });
+      });
+    }
+
+    initMagnetLinks();
     setLanguage(localStorage.getItem("vlad-language") === "en" ? "en" : "uk");
   </script>
   <script type="module">

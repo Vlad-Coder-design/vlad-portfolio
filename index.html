@@ -104,6 +104,84 @@
       letter-spacing: -0.04em;
     }
 
+    .brand-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0;
+    }
+
+    .donate-link {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--accent);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      overflow: hidden;
+      isolation: isolate;
+      transition: color 180ms ease, border-color 180ms ease, background 180ms ease, transform 180ms ease;
+    }
+
+    .donate-link::before,
+    .donate-link::after {
+      content: "";
+      position: absolute;
+      z-index: -2;
+      inset: -140%;
+      background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        transparent 72deg,
+        rgba(127, 255, 100, 0.95) 112deg,
+        transparent 152deg,
+        transparent 232deg,
+        rgba(127, 255, 100, 0.8) 272deg,
+        transparent 312deg,
+        transparent 360deg
+      );
+      animation: orbit-border-spin 3.8s linear infinite;
+      pointer-events: none;
+    }
+
+    .donate-link::after {
+      display: none;
+    }
+
+    @keyframes orbit-border-spin {
+      to { transform: rotate(1turn); }
+    }
+
+    .donate-link span {
+      position: relative;
+      z-index: 1;
+      display: block;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(13, 13, 16, 0.96);
+      transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+
+    .donate-link:hover,
+    .donate-link:focus-visible {
+      color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .donate-link:hover span,
+    .donate-link:focus-visible span {
+      border-color: var(--accent);
+      background: rgba(127, 255, 100, 0.08);
+    }
+
     .logo span {
       color: var(--accent);
     }
@@ -120,6 +198,59 @@
       font-family: "JetBrains Mono", monospace;
       font-size: 0.78rem;
       transition: color 180ms ease;
+    }
+
+    .magnet-link {
+      display: inline-flex;
+      will-change: transform;
+      transition: color 180ms ease, transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .effects-orbit-link {
+      position: relative;
+      padding: 0;
+      overflow: visible;
+    }
+
+    .effects-orbit-link::before,
+    .effects-orbit-link::after {
+      display: none;
+    }
+
+    .effects-svg {
+      width: 74px;
+      height: 18px;
+      display: block;
+      overflow: visible;
+    }
+
+    .effects-fill,
+    .effects-stroke {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0;
+      dominant-baseline: middle;
+    }
+
+    .effects-fill {
+      fill: rgba(184, 184, 191, 0.66);
+    }
+
+    .effects-stroke {
+      fill: transparent;
+      stroke: var(--accent);
+      stroke-width: 0.85;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 12 34;
+      stroke-dashoffset: 0;
+      filter: drop-shadow(0 0 5px rgba(127, 255, 100, 0.75));
+      animation: effects-letter-line 1.25s linear infinite;
+    }
+
+    @keyframes effects-letter-line {
+      to { stroke-dashoffset: -46; }
     }
 
     .nav-links a:hover,
@@ -271,6 +402,7 @@
       font-family: "JetBrains Mono", monospace;
       font-size: 0.7rem;
       white-space: nowrap;
+      transition: transform 180ms ease;
     }
 
     .badge::before,
@@ -278,24 +410,24 @@
       content: "";
       position: absolute;
       z-index: -2;
-      width: 300%;
-      height: 55%;
-      border-radius: 50%;
-      background: radial-gradient(circle, var(--accent), transparent 12%);
-      opacity: 0.85;
+      inset: -140%;
+      background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        transparent 72deg,
+        rgba(127, 255, 100, 0.95) 112deg,
+        transparent 152deg,
+        transparent 232deg,
+        rgba(127, 255, 100, 0.8) 272deg,
+        transparent 312deg,
+        transparent 360deg
+      );
+      animation: orbit-border-spin 3.8s linear infinite;
       pointer-events: none;
     }
 
-    .badge::before {
-      top: -12px;
-      left: -250%;
-      animation: star-movement-top 4s linear infinite alternate;
-    }
-
     .badge::after {
-      right: -250%;
-      bottom: -12px;
-      animation: star-movement-bottom 4s linear infinite alternate;
+      display: none;
     }
 
     .badge-label {
@@ -307,6 +439,16 @@
       border-radius: inherit;
       color: #c6c6cc;
       background: rgba(13, 13, 16, 0.96);
+      transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+
+    .badge:hover {
+      transform: translateY(-1px);
+    }
+
+    .badge:hover .badge-label {
+      border-color: var(--accent);
+      background: rgba(127, 255, 100, 0.08);
     }
 
     .badge.accent {
@@ -316,6 +458,11 @@
     .badge.accent .badge-label {
       color: var(--bg);
       border-color: var(--accent);
+      background: var(--accent);
+    }
+
+    .badge.accent:hover .badge-label {
+      color: var(--bg);
       background: var(--accent);
     }
 
@@ -1090,13 +1237,16 @@
 <body>
   <header class="site-header">
     <nav class="nav container" aria-label="Основна навігація">
-      <a class="logo" href="#top" aria-label="На головну">vlad<span>.dev</span></a>
+      <div class="brand-actions">
+        <a class="logo" href="#top" aria-label="На головну">vlad<span>.dev</span></a>
+        <a class="donate-link magnet-link" href="https://send.monobank.ua/jar/7gPgzAQqky" target="_blank" rel="noopener noreferrer" data-magnet><span>донат</span></a>
+      </div>
       <button class="menu-toggle" type="button" aria-label="Відкрити меню" aria-expanded="false">=</button>
       <ul class="nav-links">
         <li><a href="#about">./about</a></li>
         <li><a href="#projects">./projects</a></li>
         <li><a href="#goals">./goals</a></li>
-        <li><a href="page-4.html">./effects</a></li>
+        <li><a class="magnet-link effects-orbit-link" href="page-4.html" data-magnet aria-label="./effects"><svg class="effects-svg" viewBox="0 0 74 18" aria-hidden="true"><text class="effects-fill" x="0" y="9">./effects</text><text class="effects-stroke" x="0" y="9">./effects</text></svg></a></li>
         <li class="page-switcher header-page-switcher" aria-label="Перемикач сторінок">
           <span class="pill-page pill-page-current" aria-current="page">
             <span class="pill-label-stack"><span class="pill-label">01</span></span>
@@ -1619,6 +1769,39 @@
       footerDock.addEventListener("pointercancel", resetFooterDock);
     }
 
+    function initMagnetLinks() {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+      const magnetLinks = [...document.querySelectorAll("[data-magnet]")];
+      const magnetRadius = 500;
+      const magnetStrengthX = 0.163;
+      const magnetStrengthY = 0.202;
+
+      window.addEventListener("pointermove", (event) => {
+        magnetLinks.forEach((link) => {
+          const rect = link.getBoundingClientRect();
+          const x = event.clientX - (rect.left + rect.width / 2);
+          const y = event.clientY - (rect.top + rect.height / 2);
+          const distance = Math.hypot(x, y);
+          const pull = Math.max(0, 1 - distance / magnetRadius);
+
+          if (pull === 0) {
+            link.style.transform = "translate3d(0, 0, 0)";
+            return;
+          }
+
+          link.style.transform = `translate3d(${x * magnetStrengthX * pull}px, ${y * magnetStrengthY * pull}px, 0)`;
+        });
+      });
+
+      window.addEventListener("pointerleave", () => {
+        magnetLinks.forEach((link) => {
+          link.style.transform = "translate3d(0, 0, 0)";
+        });
+      });
+    }
+
+    initMagnetLinks();
     setLanguage(localStorage.getItem("vlad-language") === "en" ? "en" : "uk");
   </script>
 </body>
