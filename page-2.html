@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Друга сторінка портфоліо Влада.">
+  <title>Vlad.dev — сторінка 02</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d0d10;
+      --surface: #131317;
+      --text: #f4f4ef;
+      --muted: #8f8f98;
+      --accent: #7fff64;
+      --line: rgba(255, 255, 255, 0.11);
+      --grid: rgba(127, 255, 100, 0.035);
+      --max-width: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      color: var(--text);
+      background-color: var(--bg);
+      background-image:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+      background-size: 48px 48px;
+      font-family: "Inter", sans-serif;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 80% 12%, rgba(127, 255, 100, 0.08), transparent 28%),
+        radial-gradient(circle at 10% 72%, rgba(127, 255, 100, 0.04), transparent 22%);
+    }
+
+    body.target-cursor-enabled,
+    body.target-cursor-enabled a,
+    body.target-cursor-enabled .cursor-target {
+      cursor: none;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    ::selection {
+      color: var(--bg);
+      background: var(--accent);
+    }
+
+    .container {
+      width: min(calc(100% - 40px), var(--max-width));
+      margin-inline: auto;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      background: rgba(13, 13, 16, 0.82);
+      backdrop-filter: blur(18px);
+    }
+
+    .nav {
+      position: relative;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo,
+    .back-link,
+    .section-label,
+    .placeholder-number,
+    .footer-inner,
+    .page-switcher {
+      font-family: "JetBrains Mono", monospace;
+    }
+
+    .logo {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+    }
+
+    .logo span,
+    .back-link,
+    .section-label {
+      color: var(--accent);
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 18px;
+      font-size: 0.76rem;
+      transition: opacity 180ms ease;
+    }
+
+    .back-link:hover {
+      opacity: 0.7;
+    }
+
+    main {
+      min-height: calc(100vh - 139px);
+    }
+
+    .intro {
+      position: relative;
+      padding: 92px 0 74px;
+      border-bottom: 1px solid var(--line);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .particles-canvas {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0.75;
+    }
+
+    .intro::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background: linear-gradient(90deg, rgba(13, 13, 16, 0.25), rgba(13, 13, 16, 0.06));
+    }
+
+    .section-label {
+      margin-bottom: 24px;
+      font-size: 0.76rem;
+    }
+
+    h1 {
+      max-width: 900px;
+      font-size: clamp(4rem, 11vw, 9rem);
+      font-weight: 800;
+      letter-spacing: -0.085em;
+      line-height: 0.84;
+      text-transform: uppercase;
+    }
+
+    h1 span {
+      color: transparent;
+      -webkit-text-stroke: 1.5px var(--text);
+    }
+
+    .blocks-section {
+      padding: 72px 0 112px;
+    }
+
+    .blocks-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+    }
+
+    .placeholder {
+      position: relative;
+      min-height: 270px;
+      padding: 26px;
+      border: 1px solid var(--line);
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.012));
+      overflow: hidden;
+      transition: border-color 220ms ease, transform 220ms ease, box-shadow 220ms ease;
+    }
+
+    .placeholder:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+      box-shadow: 0 18px 60px rgba(0, 0, 0, 0.28), inset 0 0 35px rgba(127, 255, 100, 0.025);
+    }
+
+    .placeholder:nth-child(1) {
+      grid-column: span 7;
+      min-height: 380px;
+    }
+
+    .placeholder:nth-child(2) {
+      grid-column: span 5;
+      min-height: 380px;
+    }
+
+    .placeholder:nth-child(3),
+    .placeholder:nth-child(4) {
+      grid-column: span 6;
+    }
+
+    .placeholder-number {
+      color: var(--accent);
+      font-size: 0.7rem;
+    }
+
+    .placeholder::after {
+      content: "";
+      position: absolute;
+      right: 26px;
+      bottom: 26px;
+      width: 34px;
+      height: 34px;
+      border-right: 1px solid rgba(127, 255, 100, 0.35);
+      border-bottom: 1px solid rgba(127, 255, 100, 0.35);
+    }
+
+    .site-footer {
+      padding: 18px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .footer-inner {
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      color: var(--muted);
+      font-size: 0.7rem;
+    }
+
+    .page-switcher {
+      display: flex;
+      gap: 6px;
+    }
+
+    .header-page-switcher {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      gap: 8px;
+      transform: translate(-50%, -50%);
+    }
+
+    .header-page-switcher .pill-page {
+      position: relative;
+      width: 48px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      overflow: hidden;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.025);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.68rem;
+      font-weight: 700;
+      isolation: isolate;
+    }
+
+    .header-page-switcher .pill-page-current {
+      color: var(--bg);
+      border-color: var(--accent);
+      background: var(--accent);
+    }
+
+    .pill-hover-circle {
+      position: absolute;
+      left: 50%;
+      bottom: -44px;
+      z-index: -1;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--accent);
+      transform: translateX(-50%) scale(0);
+      transform-origin: center bottom;
+      transition: transform 420ms cubic-bezier(0.2, 0.75, 0.25, 1);
+    }
+
+    .pill-label-stack {
+      position: relative;
+      width: 100%;
+      height: 1em;
+      display: block;
+      overflow: hidden;
+      line-height: 1;
+    }
+
+    .pill-label,
+    .pill-label-hover {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      transition: transform 320ms cubic-bezier(0.2, 0.75, 0.25, 1), opacity 220ms ease;
+    }
+
+    .pill-label-hover {
+      color: var(--bg);
+      opacity: 0;
+      transform: translateY(150%);
+    }
+
+    .header-page-switcher a.pill-page:hover,
+    .header-page-switcher a.pill-page:focus-visible {
+      border-color: var(--accent);
+    }
+
+    .header-page-switcher a.pill-page:hover .pill-hover-circle,
+    .header-page-switcher a.pill-page:focus-visible .pill-hover-circle {
+      transform: translateX(-50%) scale(1);
+    }
+
+    .header-page-switcher a.pill-page:hover .pill-label,
+    .header-page-switcher a.pill-page:focus-visible .pill-label {
+      opacity: 0;
+      transform: translateY(-150%);
+    }
+
+    .header-page-switcher a.pill-page:hover .pill-label-hover,
+    .header-page-switcher a.pill-page:focus-visible .pill-label-hover {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .gooey-burst {
+      position: absolute;
+      z-index: 20;
+      width: 0;
+      height: 0;
+      pointer-events: none;
+      overflow: visible;
+    }
+
+    .gooey-wave,
+    .gooey-particle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      background: var(--accent);
+      pointer-events: none;
+    }
+
+    .gooey-wave {
+      width: 24px;
+      height: 24px;
+      opacity: 0.75;
+      transform: translate(-50%, -50%) scale(0.4);
+      animation: gooey-wave 520ms ease-out forwards;
+    }
+
+    .gooey-particle {
+      width: var(--size);
+      height: var(--size);
+      box-shadow: 0 0 12px rgba(127, 255, 100, 0.55);
+      transform: translate(-50%, -50%);
+      animation: gooey-particle 520ms cubic-bezier(0.15, 0.65, 0.25, 1) forwards;
+    }
+
+    @keyframes gooey-wave {
+      70% { opacity: 0.45; }
+      to { opacity: 0; transform: translate(-50%, -50%) scale(3.1); }
+    }
+
+    @keyframes gooey-particle {
+      60% { opacity: 1; }
+      to {
+        opacity: 0;
+        transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(0.2);
+      }
+    }
+
+    .language-switcher {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding-left: 18px;
+      border-left: 1px solid var(--line);
+    }
+
+    .nav-extra-link {
+      margin-left: auto;
+      margin-right: 18px;
+      color: var(--muted);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.76rem;
+      transition: color 180ms ease;
+    }
+
+    .nav-extra-link:hover,
+    .nav-extra-link:focus-visible {
+      color: var(--accent);
+    }
+
+    .language-button {
+      width: 38px;
+      height: 30px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--muted);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.68rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+
+    .language-button:hover,
+    .language-button:focus-visible {
+      color: var(--accent);
+      border-color: rgba(127, 255, 100, 0.45);
+    }
+
+    .language-button.active {
+      color: var(--bg);
+      border-color: var(--accent);
+      background: var(--accent);
+    }
+
+    .page-switcher a,
+    .page-current {
+      width: 34px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      font-size: 0.66rem;
+      transition: color 180ms ease, border-color 180ms ease;
+    }
+
+    .page-current {
+      color: var(--bg);
+      border-color: var(--accent);
+      background: var(--accent);
+    }
+
+    .page-switcher a:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .footer-dock {
+      min-height: 58px;
+      padding: 8px;
+      gap: 8px;
+      align-items: flex-end;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 18px;
+      background: rgba(19, 19, 23, 0.88);
+      box-shadow: 0 14px 45px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(16px);
+    }
+
+    .page-switcher.footer-dock a,
+    .footer-dock .page-current {
+      --dock-scale: 1;
+      position: relative;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: #0d0d10;
+      transform: translateY(calc((var(--dock-scale) - 1) * -11px)) scale(var(--dock-scale));
+      transform-origin: center bottom;
+      transition:
+        transform 160ms cubic-bezier(0.2, 0.8, 0.2, 1),
+        color 160ms ease,
+        border-color 160ms ease,
+        background 160ms ease;
+      will-change: transform;
+    }
+
+    .page-switcher.footer-dock a::after,
+    .footer-dock .page-current::after {
+      content: attr(data-dock-label);
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 15px);
+      padding: 5px 8px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      color: var(--text);
+      background: rgba(13, 13, 16, 0.96);
+      font-size: 0.58rem;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, 6px);
+      transition: opacity 150ms ease, transform 150ms ease;
+    }
+
+    .page-switcher.footer-dock a:hover::after,
+    .page-switcher.footer-dock a:focus-visible::after,
+    .footer-dock .page-current:hover::after {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    .footer-phrase {
+      color: var(--accent);
+    }
+
+    .footer-contact {
+      color: var(--muted);
+      transition: color 180ms ease;
+    }
+
+    a.footer-contact:hover,
+    a.footer-contact:focus-visible {
+      color: var(--accent);
+    }
+
+    .target-cursor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 100;
+      width: 0;
+      height: 0;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 180ms ease;
+      will-change: transform;
+    }
+
+    .target-cursor.visible {
+      opacity: 1;
+    }
+
+    .target-cursor-dot {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 12px rgba(127, 255, 100, 0.75);
+      transform: translate(-50%, -50%);
+      transition: opacity 150ms ease;
+    }
+
+    .target-cursor.locked .target-cursor-dot {
+      opacity: 0;
+    }
+
+    .target-cursor-corners {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 28px;
+      height: 28px;
+      transform: translate(-14px, -14px);
+      animation: cursor-spin 2s linear infinite;
+    }
+
+    .target-cursor.locked .target-cursor-corners {
+      animation: none;
+      transform: none;
+    }
+
+    .target-cursor-corner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 12px;
+      height: 12px;
+      border-color: var(--accent);
+      border-style: solid;
+      filter: drop-shadow(0 0 4px rgba(127, 255, 100, 0.5));
+      will-change: transform;
+    }
+
+    .target-cursor-corner:nth-child(1) {
+      border-width: 2px 0 0 2px;
+    }
+
+    .target-cursor-corner:nth-child(2) {
+      border-width: 2px 2px 0 0;
+    }
+
+    .target-cursor-corner:nth-child(3) {
+      border-width: 0 2px 2px 0;
+    }
+
+    .target-cursor-corner:nth-child(4) {
+      border-width: 0 0 2px 2px;
+    }
+
+    @keyframes cursor-spin {
+      from { transform: translate(-14px, -14px) rotate(0deg); }
+      to { transform: translate(-14px, -14px) rotate(360deg); }
+    }
+
+    @media (max-width: 760px) {
+      .target-cursor {
+        display: none;
+      }
+
+      .intro {
+        padding: 72px 0 58px;
+      }
+
+      .placeholder:nth-child(n) {
+        grid-column: span 12;
+        min-height: 250px;
+      }
+
+      .footer-inner {
+        flex-wrap: wrap;
+      }
+
+      .header-page-switcher {
+        position: static;
+        transform: none;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .container {
+        width: min(calc(100% - 28px), var(--max-width));
+      }
+
+      .back-link {
+        font-size: 0.65rem;
+      }
+
+      .nav {
+        height: auto;
+        min-height: 88px;
+        flex-wrap: wrap;
+        gap: 8px 18px;
+        padding: 12px 0;
+      }
+
+      .header-page-switcher {
+        order: 3;
+        width: 100%;
+      }
+
+      .language-switcher {
+        padding-left: 10px;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 12px 0;
+      }
+
+      .page-switcher {
+        order: -1;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .target-cursor-corners {
+        animation: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="target-cursor" aria-hidden="true">
+    <span class="target-cursor-dot"></span>
+    <span class="target-cursor-corners">
+      <span class="target-cursor-corner"></span>
+      <span class="target-cursor-corner"></span>
+      <span class="target-cursor-corner"></span>
+      <span class="target-cursor-corner"></span>
+    </span>
+  </div>
+
+  <header class="site-header">
+    <nav class="nav container" aria-label="Основна навігація">
+      <a class="logo" href="index.html">vlad<span>.dev</span></a>
+      <div class="page-switcher header-page-switcher" aria-label="Перемикач сторінок">
+        <a class="pill-page cursor-target" href="index.html" aria-label="Відкрити першу сторінку">
+          <span class="pill-hover-circle" aria-hidden="true"></span>
+          <span class="pill-label-stack">
+            <span class="pill-label">01</span>
+            <span class="pill-label-hover" aria-hidden="true">01</span>
+          </span>
+        </a>
+        <span class="pill-page pill-page-current cursor-target" aria-current="page">
+          <span class="pill-label-stack"><span class="pill-label">02</span></span>
+        </span>
+        <a class="pill-page cursor-target" href="page-3.html" aria-label="Відкрити третю сторінку">
+          <span class="pill-hover-circle" aria-hidden="true"></span>
+          <span class="pill-label-stack">
+            <span class="pill-label">03</span>
+            <span class="pill-label-hover" aria-hidden="true">03</span>
+          </span>
+        </a>
+      </div>
+      <a class="nav-extra-link cursor-target" href="page-4.html">./effects</a>
+      <div class="language-switcher" aria-label="Перемикач мови">
+        <button class="language-button active cursor-target" type="button" data-language="uk" aria-pressed="true">UA</button>
+        <button class="language-button cursor-target" type="button" data-language="en" aria-pressed="false">EN</button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="container">
+      <a class="back-link cursor-target" href="index.html">← ./back</a>
+    </div>
+    <section class="intro" id="particles-section">
+      <canvas class="particles-canvas" aria-hidden="true"></canvas>
+      <div class="container">
+        <p class="section-label">02 / NEXT PAGE</p>
+        <h1>Нова<br><span>сторінка</span></h1>
+      </div>
+    </section>
+
+    <section class="blocks-section" aria-label="Майбутні блоки">
+      <div class="container blocks-grid">
+        <article class="placeholder cursor-target"><span class="placeholder-number">01 / EMPTY</span></article>
+        <article class="placeholder cursor-target"><span class="placeholder-number">02 / EMPTY</span></article>
+        <article class="placeholder cursor-target"><span class="placeholder-number">03 / EMPTY</span></article>
+        <article class="placeholder cursor-target"><span class="placeholder-number">04 / EMPTY</span></article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> VLAD.DEV</p>
+      <p class="footer-contact">твоя пошта</p>
+      <nav class="page-switcher footer-dock" aria-label="Перемикач сторінок">
+        <a class="cursor-target" href="index.html" aria-label="Відкрити першу сторінку" data-dock-item data-dock-label="Головна">01</a>
+        <span class="page-current cursor-target" aria-current="page" data-dock-item data-dock-label="Сторінка 2">02</span>
+        <a class="cursor-target" href="page-3.html" aria-label="Відкрити третю сторінку" data-dock-item data-dock-label="Мапа">03</a>
+      </nav>
+      <a class="footer-contact cursor-target" href="tel:+380639351692">+380 63 935 1692</a>
+      <p class="footer-phrase">// space for new ideas</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    const footerDock = document.querySelector(".footer-dock");
+    const footerDockItems = footerDock
+      ? [...footerDock.querySelectorAll("[data-dock-item]")]
+      : [];
+
+    const resetFooterDock = () => {
+      footerDockItems.forEach((item) => item.style.setProperty("--dock-scale", "1"));
+    };
+
+    if (footerDock && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      footerDock.addEventListener("pointermove", (event) => {
+        footerDockItems.forEach((item) => {
+          const rect = item.getBoundingClientRect();
+          const center = rect.left + rect.width / 2;
+          const distance = Math.abs(event.clientX - center);
+          const influence = Math.max(0, 1 - distance / 105);
+          const scale = 1 + influence * influence * 0.48;
+          item.style.setProperty("--dock-scale", scale.toFixed(3));
+        });
+      });
+
+      footerDock.addEventListener("pointerleave", resetFooterDock);
+      footerDock.addEventListener("pointercancel", resetFooterDock);
+    }
+
+    const languageButtons = document.querySelectorAll(".language-button");
+    const pageTwoTranslations = {
+      uk: {
+        title: "Vlad.dev — сторінка 02",
+        description: "Друга сторінка портфоліо Влада.",
+        navLabel: "Основна навігація",
+        pagesLabel: "Перемикач сторінок",
+        firstPageLabel: "Відкрити першу сторінку",
+        languageLabel: "Перемикач мови",
+        back: "← ./назад",
+        sectionLabel: "02 / НАСТУПНА СТОРІНКА",
+        heading: "Нова<br><span>сторінка</span>",
+        blocksLabel: "Майбутні блоки",
+        empty: "ПОРОЖНЬО",
+        footer: "// простір для нових ідей"
+      },
+      en: {
+        title: "Vlad.dev — page 02",
+        description: "The second page of Vlad's portfolio.",
+        navLabel: "Main navigation",
+        pagesLabel: "Page switcher",
+        firstPageLabel: "Open the first page",
+        languageLabel: "Language switcher",
+        back: "← ./back",
+        sectionLabel: "02 / NEXT PAGE",
+        heading: "New<br><span>page</span>",
+        blocksLabel: "Future blocks",
+        empty: "EMPTY",
+        footer: "// space for new ideas"
+      }
+    };
+
+    function setPageTwoLanguage(language) {
+      const copy = pageTwoTranslations[language];
+      document.documentElement.lang = language;
+      document.title = copy.title;
+      document.querySelector('meta[name="description"]').content = copy.description;
+      document.querySelector(".nav").setAttribute("aria-label", copy.navLabel);
+      document.querySelectorAll(".page-switcher").forEach((switcher) => {
+        switcher.setAttribute("aria-label", copy.pagesLabel);
+      });
+      document.querySelectorAll('a[href="index.html"][aria-label]').forEach((link) => {
+        link.setAttribute("aria-label", copy.firstPageLabel);
+      });
+      document.querySelector(".language-switcher").setAttribute("aria-label", copy.languageLabel);
+      document.querySelector(".back-link").textContent = copy.back;
+      document.querySelector(".section-label").textContent = copy.sectionLabel;
+      document.querySelector("h1").innerHTML = copy.heading;
+      document.querySelector(".blocks-section").setAttribute("aria-label", copy.blocksLabel);
+      document.querySelectorAll(".placeholder-number").forEach((label, index) => {
+        label.textContent = `${String(index + 1).padStart(2, "0")} / ${copy.empty}`;
+      });
+      document.querySelector(".footer-phrase").textContent = copy.footer;
+
+      languageButtons.forEach((button) => {
+        const active = button.dataset.language === language;
+        button.classList.toggle("active", active);
+        button.setAttribute("aria-pressed", String(active));
+      });
+      localStorage.setItem("vlad-language", language);
+    }
+
+    languageButtons.forEach((button) => {
+      button.addEventListener("click", () => setPageTwoLanguage(button.dataset.language));
+    });
+
+    setPageTwoLanguage(localStorage.getItem("vlad-language") === "en" ? "en" : "uk");
+
+    document.querySelectorAll(".header-page-switcher a.pill-page").forEach((link) => {
+      link.addEventListener("click", (event) => {
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        event.preventDefault();
+
+        const burst = document.createElement("span");
+        burst.className = "gooey-burst";
+        const wave = document.createElement("span");
+        wave.className = "gooey-wave";
+        burst.appendChild(wave);
+
+        for (let index = 0; index < 14; index += 1) {
+          const particle = document.createElement("span");
+          const angle = (Math.PI * 2 * index) / 14 + Math.random() * 0.35;
+          const distance = 26 + Math.random() * 30;
+          particle.className = "gooey-particle";
+          particle.style.setProperty("--x", `${Math.cos(angle) * distance}px`);
+          particle.style.setProperty("--y", `${Math.sin(angle) * distance}px`);
+          particle.style.setProperty("--size", `${5 + Math.random() * 7}px`);
+          burst.appendChild(particle);
+        }
+
+        const switcher = link.closest(".header-page-switcher");
+        const linkRect = link.getBoundingClientRect();
+        const switcherRect = switcher.getBoundingClientRect();
+        burst.style.left = `${linkRect.left + linkRect.width / 2 - switcherRect.left}px`;
+        burst.style.top = `${linkRect.top + linkRect.height / 2 - switcherRect.top}px`;
+        switcher.appendChild(burst);
+        link.classList.add("pill-page-current");
+        window.setTimeout(() => {
+          window.location.href = link.href;
+        }, 470);
+      });
+    });
+
+    const particlesSection = document.getElementById("particles-section");
+    const particlesCanvas = document.querySelector(".particles-canvas");
+    const particlesContext = particlesCanvas.getContext("2d");
+    const particlePointer = { x: 0, y: 0, active: false };
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let particles = [];
+    let particlesWidth = 0;
+    let particlesHeight = 0;
+    let particlesFrame = null;
+
+    const createParticles = () => {
+      const count = Math.min(200, Math.max(90, Math.round((particlesWidth * particlesHeight) / 3200)));
+      particles = Array.from({ length: count }, () => ({
+        x: Math.random() * particlesWidth,
+        y: Math.random() * particlesHeight,
+        depth: 0.35 + Math.random() * 0.9,
+        size: 0.7 + Math.random() * 2.2,
+        alpha: 0.18 + Math.random() * 0.62,
+        phase: Math.random() * Math.PI * 2,
+        speed: 0.12 + Math.random() * 0.3,
+        color: Math.random() > 0.78 ? "127, 255, 100" : "255, 255, 255"
+      }));
+    };
+
+    const resizeParticles = () => {
+      const rect = particlesSection.getBoundingClientRect();
+      const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+      particlesWidth = rect.width;
+      particlesHeight = rect.height;
+      particlesCanvas.width = Math.round(particlesWidth * pixelRatio);
+      particlesCanvas.height = Math.round(particlesHeight * pixelRatio);
+      particlesCanvas.style.width = `${particlesWidth}px`;
+      particlesCanvas.style.height = `${particlesHeight}px`;
+      particlesContext.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+      createParticles();
+    };
+
+    const renderParticles = (time = 0) => {
+      particlesContext.clearRect(0, 0, particlesWidth, particlesHeight);
+      const t = time * 0.0001;
+
+      particles.forEach((particle) => {
+        const waveX = Math.sin(t * particle.speed * 8 + particle.phase) * 14 * particle.depth;
+        const waveY = Math.cos(t * particle.speed * 6 + particle.phase) * 10 * particle.depth;
+        let x = particle.x + waveX;
+        let y = particle.y + waveY;
+
+        if (particlePointer.active) {
+          const dx = x - particlePointer.x;
+          const dy = y - particlePointer.y;
+          const distance = Math.hypot(dx, dy);
+          const radius = 145;
+          if (distance < radius && distance > 0) {
+            const force = (1 - distance / radius) * 34 * particle.depth;
+            x += (dx / distance) * force;
+            y += (dy / distance) * force;
+          }
+        }
+
+        const pulse = 0.78 + Math.sin(t * 12 + particle.phase) * 0.22;
+        particlesContext.beginPath();
+        particlesContext.arc(x, y, particle.size * particle.depth * pulse, 0, Math.PI * 2);
+        particlesContext.fillStyle = `rgba(${particle.color}, ${particle.alpha})`;
+        particlesContext.fill();
+      });
+
+      if (!reduceMotion) {
+        particlesFrame = requestAnimationFrame(renderParticles);
+      }
+    };
+
+    particlesSection.addEventListener("mousemove", (event) => {
+      const rect = particlesSection.getBoundingClientRect();
+      particlePointer.x = event.clientX - rect.left;
+      particlePointer.y = event.clientY - rect.top;
+      particlePointer.active = true;
+    });
+
+    particlesSection.addEventListener("mouseleave", () => {
+      particlePointer.active = false;
+    });
+
+    window.addEventListener("resize", resizeParticles);
+    resizeParticles();
+    renderParticles();
+
+    const cursor = document.querySelector(".target-cursor");
+    const canUseCustomCursor = window.matchMedia("(pointer: fine)").matches && window.innerWidth > 768;
+
+    if (canUseCustomCursor) {
+      document.body.classList.add("target-cursor-enabled");
+
+      const state = {
+        currentX: window.innerWidth / 2,
+        currentY: window.innerHeight / 2,
+        targetX: window.innerWidth / 2,
+        targetY: window.innerHeight / 2,
+        pointerX: window.innerWidth / 2,
+        pointerY: window.innerHeight / 2,
+        corners: [
+          { x: 0, y: 0, targetX: 0, targetY: 0 },
+          { x: 16, y: 0, targetX: 16, targetY: 0 },
+          { x: 16, y: 16, targetX: 16, targetY: 16 },
+          { x: 0, y: 16, targetX: 0, targetY: 16 }
+        ],
+        activeTarget: null
+      };
+      const cornerElements = Array.from(cursor.querySelectorAll(".target-cursor-corner"));
+
+      const renderCursor = () => {
+        const ease = state.activeTarget ? 0.2 : 0.26;
+        state.currentX += (state.targetX - state.currentX) * ease;
+        state.currentY += (state.targetY - state.currentY) * ease;
+
+        cursor.style.transform = `translate3d(${state.currentX}px, ${state.currentY}px, 0)`;
+
+        state.corners.forEach((corner, index) => {
+          corner.x += (corner.targetX - corner.x) * 0.22;
+          corner.y += (corner.targetY - corner.y) * 0.22;
+          cornerElements[index].style.transform = `translate3d(${corner.x}px, ${corner.y}px, 0)`;
+        });
+
+        requestAnimationFrame(renderCursor);
+      };
+
+      const setFreeCorners = () => {
+        const positions = [
+          [0, 0],
+          [16, 0],
+          [16, 16],
+          [0, 16]
+        ];
+        state.corners.forEach((corner, index) => {
+          corner.targetX = positions[index][0];
+          corner.targetY = positions[index][1];
+        });
+      };
+
+      const setTargetCorners = (rect) => {
+        const padding = 9;
+        const left = rect.left - padding - state.targetX;
+        const top = rect.top - padding - state.targetY;
+        const right = rect.right + padding - state.targetX - 12;
+        const bottom = rect.bottom + padding - state.targetY - 12;
+        const positions = [
+          [left, top],
+          [right, top],
+          [right, bottom],
+          [left, bottom]
+        ];
+        state.corners.forEach((corner, index) => {
+          corner.targetX = positions[index][0];
+          corner.targetY = positions[index][1];
+        });
+      };
+
+      const releaseTarget = () => {
+        state.activeTarget = null;
+        state.targetX = state.pointerX;
+        state.targetY = state.pointerY;
+        setFreeCorners();
+        cursor.classList.remove("locked");
+      };
+
+      const activateTarget = (target) => {
+        const rect = target.getBoundingClientRect();
+        state.activeTarget = target;
+        state.targetX = rect.left + rect.width / 2;
+        state.targetY = rect.top + rect.height / 2;
+        setTargetCorners(rect);
+        cursor.classList.add("locked");
+      };
+
+      document.addEventListener("mousemove", (event) => {
+        cursor.classList.add("visible");
+        state.pointerX = event.clientX;
+        state.pointerY = event.clientY;
+
+        const hoveredTarget = document.elementFromPoint(event.clientX, event.clientY)?.closest(".cursor-target");
+        if (hoveredTarget !== state.activeTarget) {
+          if (hoveredTarget) {
+            activateTarget(hoveredTarget);
+          } else {
+            releaseTarget();
+          }
+        }
+
+        if (!state.activeTarget) {
+          state.targetX = event.clientX;
+          state.targetY = event.clientY;
+          return;
+        }
+
+        const rect = state.activeTarget.getBoundingClientRect();
+        const offsetX = (event.clientX - (rect.left + rect.width / 2)) * 0.035;
+        const offsetY = (event.clientY - (rect.top + rect.height / 2)) * 0.035;
+        state.targetX = rect.left + rect.width / 2 + offsetX;
+        state.targetY = rect.top + rect.height / 2 + offsetY;
+        setTargetCorners(rect);
+      });
+
+      document.addEventListener("mouseleave", () => cursor.classList.remove("visible"));
+
+      window.addEventListener("scroll", () => {
+        if (!state.activeTarget) return;
+        const rect = state.activeTarget.getBoundingClientRect();
+        state.targetX = rect.left + rect.width / 2;
+        state.targetY = rect.top + rect.height / 2;
+        setTargetCorners(rect);
+      }, { passive: true });
+
+      renderCursor();
+    }
+  </script>
+</body>
+</html>
