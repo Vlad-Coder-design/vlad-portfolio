@@ -4,13 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0d0d10">
-  <title>Vlad.dev — offline runner</title>
+  <title>Vlad.dev — offline arcade</title>
   <style>
     :root {
       --bg: #0d0d10;
       --text: #f4f4ef;
       --muted: #9b9ba5;
       --accent: #7fff64;
+      --hot: #ff8a3d;
+      --blue: #62c7ff;
       --line: rgba(255, 255, 255, 0.12);
       --grid: rgba(127, 255, 100, 0.05);
     }
@@ -45,7 +47,12 @@
       pointer-events: none;
       background:
         radial-gradient(circle at 78% 16%, rgba(127, 255, 100, 0.14), transparent 28%),
-        radial-gradient(circle at 12% 84%, rgba(127, 255, 100, 0.09), transparent 24%);
+        radial-gradient(circle at 16% 88%, rgba(98, 199, 255, 0.1), transparent 24%);
+    }
+
+    button {
+      color: inherit;
+      font: inherit;
     }
 
     .offline-shell {
@@ -91,7 +98,7 @@
       border: 1px solid var(--line);
       background:
         linear-gradient(180deg, rgba(127, 255, 100, 0.06), transparent 45%),
-        rgba(10, 10, 13, 0.7);
+        rgba(10, 10, 13, 0.74);
       box-shadow: inset 0 0 0 1px rgba(127, 255, 100, 0.03);
       overflow: hidden;
     }
@@ -111,7 +118,7 @@
       position: relative;
       z-index: 1;
       width: min(100%, 1120px);
-      height: min(58vh, 480px);
+      height: min(58vh, 500px);
       display: block;
       image-rendering: auto;
     }
@@ -138,16 +145,27 @@
     .intro {
       position: absolute;
       z-index: 3;
-      inset: auto 22px 24px 22px;
-      max-width: 640px;
+      left: 22px;
+      bottom: 24px;
+      max-width: 660px;
       color: var(--muted);
-      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      font-size: clamp(1rem, 2.5vw, 1.35rem);
       line-height: 1.55;
       pointer-events: none;
     }
 
     .intro b {
       color: var(--text);
+    }
+
+    .game-button,
+    .mode-card,
+    .back-button {
+      border: 1px solid rgba(127, 255, 100, 0.44);
+      font-family: "JetBrains Mono", Consolas, monospace;
+      font-weight: 800;
+      text-transform: uppercase;
+      cursor: pointer;
     }
 
     .game-button {
@@ -157,17 +175,107 @@
       z-index: 4;
       min-height: 44px;
       padding: 0 18px;
-      border: 1px solid rgba(127, 255, 100, 0.44);
       color: var(--bg);
       background: var(--accent);
-      font-family: "JetBrains Mono", Consolas, monospace;
-      font-weight: 800;
-      text-transform: uppercase;
-      cursor: pointer;
     }
 
-    .game-button:hover {
+    .game-button:hover,
+    .mode-card:hover,
+    .back-button:hover {
       filter: brightness(1.08);
+    }
+
+    .back-button {
+      position: absolute;
+      z-index: 4;
+      left: 22px;
+      top: 58px;
+      min-height: 34px;
+      padding: 0 12px;
+      color: rgba(244, 244, 239, 0.78);
+      background: rgba(13, 13, 16, 0.5);
+    }
+
+    .mode-menu {
+      position: absolute;
+      z-index: 5;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background:
+        radial-gradient(circle at 70% 25%, rgba(127, 255, 100, 0.12), transparent 28%),
+        rgba(13, 13, 16, 0.78);
+      backdrop-filter: blur(10px);
+    }
+
+    .mode-panel {
+      width: min(940px, 100%);
+    }
+
+    .mode-kicker {
+      margin-bottom: 14px;
+      color: var(--accent);
+      font-family: "JetBrains Mono", Consolas, monospace;
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .mode-title {
+      max-width: 780px;
+      margin-bottom: 28px;
+      color: var(--text);
+      font-size: clamp(2.4rem, 7vw, 5.8rem);
+      line-height: 0.88;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .mode-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .mode-card {
+      display: grid;
+      min-height: 190px;
+      padding: 20px;
+      text-align: left;
+      color: var(--text);
+      background:
+        linear-gradient(135deg, rgba(127, 255, 100, 0.12), rgba(98, 199, 255, 0.04)),
+        rgba(16, 16, 20, 0.86);
+      transition: transform 180ms ease, border-color 180ms ease;
+    }
+
+    .mode-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(127, 255, 100, 0.82);
+    }
+
+    .mode-card strong {
+      align-self: end;
+      font-size: clamp(1.45rem, 3vw, 2.6rem);
+      line-height: 0.95;
+    }
+
+    .mode-card span {
+      max-width: 390px;
+      color: var(--muted);
+      font-family: Inter, Arial, sans-serif;
+      font-weight: 500;
+      text-transform: none;
+      line-height: 1.5;
+    }
+
+    .mode-card[data-mode="galaxy"] {
+      border-color: rgba(98, 199, 255, 0.44);
+      background:
+        radial-gradient(circle at 75% 22%, rgba(98, 199, 255, 0.18), transparent 34%),
+        linear-gradient(135deg, rgba(127, 255, 100, 0.08), rgba(255, 138, 61, 0.08)),
+        rgba(16, 16, 20, 0.9);
     }
 
     .hidden {
@@ -193,6 +301,18 @@
         height: 62vh;
       }
 
+      .mode-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .mode-title {
+        margin-bottom: 18px;
+      }
+
+      .mode-card {
+        min-height: 150px;
+      }
+
       .intro {
         inset-inline: 14px;
         bottom: 76px;
@@ -202,6 +322,11 @@
         right: 14px;
         bottom: 18px;
       }
+
+      .back-button {
+        left: 14px;
+        top: 50px;
+      }
     }
   </style>
 </head>
@@ -209,25 +334,43 @@
   <main class="offline-shell">
     <header class="topbar">
       <div class="brand">vlad<span>.dev</span></div>
-      <div class="status">offline mode</div>
+      <div class="status" id="modeLabel">offline arcade</div>
     </header>
 
-    <section class="game-stage" aria-label="Offline mini game">
+    <section class="game-stage" aria-label="Offline mini games">
       <div class="hud">
         <div>Score: <strong id="score">0</strong></div>
         <div>Best: <strong id="best">0</strong></div>
       </div>
-      <canvas id="game" width="1120" height="480"></canvas>
+      <button class="back-button hidden" id="back" type="button">Меню</button>
+      <canvas id="game" width="1120" height="500"></canvas>
       <p class="intro" id="intro">
         <b>Інтернет зник, але сайт не здається.</b><br>
-        Натисни Space, ↑ або тапни по екрану, щоб перестрибувати баги.
+        Обери гру: стрибати через баги або захищати галактику.
       </p>
-      <button class="game-button" id="restart" type="button">Старт</button>
+      <button class="game-button hidden" id="restart" type="button">Старт</button>
+
+      <div class="mode-menu" id="modeMenu">
+        <div class="mode-panel">
+          <div class="mode-kicker">offline mode</div>
+          <h1 class="mode-title">Обери міні-гру</h1>
+          <div class="mode-grid">
+            <button class="mode-card" type="button" data-mode="runner">
+              <span>Класичний runner у стилі динозаврика: стрибок, перешкоди, швидкість росте.</span>
+              <strong>Динозаврик</strong>
+            </button>
+            <button class="mode-card" type="button" data-mode="galaxy">
+              <span>Вертикальний космічний шутер: корабель, автострільба, хвилі ворогів, бонуси й сильніші цілі.</span>
+              <strong>Galaxy Shooter</strong>
+            </button>
+          </div>
+        </div>
+      </div>
     </section>
 
     <footer class="game-footer">
       <span>2026 Vlad.dev</span>
-      <span>// offline runner</span>
+      <span>// pixels still alive</span>
     </footer>
   </main>
 
@@ -237,60 +380,120 @@
     const scoreNode = document.getElementById("score");
     const bestNode = document.getElementById("best");
     const restartButton = document.getElementById("restart");
+    const backButton = document.getElementById("back");
     const intro = document.getElementById("intro");
+    const modeMenu = document.getElementById("modeMenu");
+    const modeLabel = document.getElementById("modeLabel");
 
-    const state = {
+    let activeMode = "menu";
+    let keys = new Set();
+    let pointer = { active: false, x: canvas.width / 2, y: canvas.height - 90 };
+
+    const runner = {
       running: false,
       ended: false,
       time: 0,
       score: 0,
       speed: 6,
-      ground: 380,
-      best: Number(localStorage.getItem("vlad-offline-best") || 0),
+      ground: 395,
+      best: Number(localStorage.getItem("vlad-runner-best") || 0),
       obstacles: [],
-      particles: []
+      particles: [],
+      player: {
+        x: 120,
+        y: 337,
+        width: 54,
+        height: 58,
+        vy: 0,
+        onGround: true
+      }
     };
 
-    const player = {
-      x: 120,
-      y: state.ground - 58,
-      width: 54,
-      height: 58,
-      vy: 0,
-      onGround: true
+    const galaxy = {
+      running: false,
+      ended: false,
+      time: 0,
+      score: 0,
+      lives: 3,
+      wave: 1,
+      best: Number(localStorage.getItem("vlad-galaxy-best") || 0),
+      stars: [],
+      bullets: [],
+      enemyBullets: [],
+      enemies: [],
+      particles: [],
+      powerups: [],
+      ship: { x: canvas.width / 2, y: canvas.height - 78, tx: canvas.width / 2, ty: canvas.height - 78, fire: 0, power: 1 }
     };
 
-    bestNode.textContent = state.best;
+    function setBest(value) {
+      bestNode.textContent = value;
+    }
 
-    function resetGame() {
-      state.running = true;
-      state.ended = false;
-      state.time = 0;
-      state.score = 0;
-      state.speed = 6;
-      state.obstacles = [];
-      state.particles = [];
-      player.y = state.ground - player.height;
-      player.vy = 0;
-      player.onGround = true;
+    function setScore(value) {
+      scoreNode.textContent = Math.max(0, Math.floor(value));
+    }
+
+    function showMenu() {
+      activeMode = "menu";
+      runner.running = false;
+      galaxy.running = false;
+      modeMenu.classList.remove("hidden");
+      backButton.classList.add("hidden");
+      restartButton.classList.add("hidden");
+      intro.classList.remove("hidden");
+      intro.innerHTML = "<b>Інтернет зник, але сайт не здається.</b><br>Обери гру: стрибати через баги або захищати галактику.";
+      modeLabel.textContent = "offline arcade";
+      setScore(0);
+      setBest(Math.max(runner.best, galaxy.best));
+    }
+
+    function startMode(mode) {
+      activeMode = mode;
+      modeMenu.classList.add("hidden");
+      backButton.classList.remove("hidden");
+      restartButton.classList.add("hidden");
+
+      if (mode === "runner") resetRunner();
+      if (mode === "galaxy") resetGalaxy();
+    }
+
+    function resetRunner() {
+      Object.assign(runner, {
+        running: true,
+        ended: false,
+        time: 0,
+        score: 0,
+        speed: 6,
+        obstacles: [],
+        particles: []
+      });
+      runner.player.y = runner.ground - runner.player.height;
+      runner.player.vy = 0;
+      runner.player.onGround = true;
       intro.classList.add("hidden");
       restartButton.textContent = "Заново";
       restartButton.classList.add("hidden");
+      modeLabel.textContent = "dino runner";
+      setBest(runner.best);
+      setScore(0);
     }
 
-    function jump() {
-      if (!state.running) {
-        resetGame();
+    function runnerJump() {
+      if (activeMode !== "runner") return;
+      if (!runner.running) {
+        resetRunner();
         return;
       }
 
+      const player = runner.player;
       if (player.onGround) {
-        player.vy = -16.6;
+        player.vy = -16.8;
         player.onGround = false;
         for (let i = 0; i < 8; i += 1) {
-          state.particles.push({
+          runner.particles.push({
             x: player.x + 10,
-            y: state.ground - 10,
+            y: runner.ground - 10,
             vx: -Math.random() * 3 - 1,
             vy: -Math.random() * 3,
             life: 34
@@ -299,42 +502,84 @@
       }
     }
 
-    function endGame() {
-      state.running = false;
-      state.ended = true;
+    function endRunner() {
+      runner.running = false;
+      runner.ended = true;
       intro.innerHTML = "<b>Ой, баг наздогнав.</b><br>Натисни кнопку, Space або тапни, щоб спробувати ще раз.";
       intro.classList.remove("hidden");
       restartButton.classList.remove("hidden");
 
-      if (state.score > state.best) {
-        state.best = state.score;
-        localStorage.setItem("vlad-offline-best", state.best);
-        bestNode.textContent = state.best;
+      if (runner.score > runner.best) {
+        runner.best = runner.score;
+        localStorage.setItem("vlad-runner-best", runner.best);
+        setBest(runner.best);
       }
     }
 
-    function spawnObstacle() {
+    function spawnRunnerObstacle() {
       const tall = Math.random() > 0.62;
       const width = tall ? 34 : 48;
       const height = tall ? 82 : 48;
-      state.obstacles.push({
+      runner.obstacles.push({
         x: canvas.width + 40,
-        y: state.ground - height,
+        y: runner.ground - height,
         width,
         height,
         hue: tall ? "#7fff64" : "#f4f4ef"
       });
     }
 
-    function drawPlayer() {
-      const x = player.x;
-      const y = player.y;
+    function collide(a, b, pad = 0) {
+      return (
+        a.x + pad < b.x + b.width &&
+        a.x + a.width - pad > b.x &&
+        a.y + pad < b.y + b.height &&
+        a.y + a.height - pad > b.y
+      );
+    }
 
+    function updateRunner() {
+      if (!runner.running) return;
+
+      const player = runner.player;
+      runner.time += 1;
+      runner.score = Math.floor(runner.time / 4);
+      runner.speed = Math.min(13, 6 + runner.score / 180);
+      setScore(runner.score);
+
+      player.vy += 0.82;
+      player.y += player.vy;
+      if (player.y >= runner.ground - player.height) {
+        player.y = runner.ground - player.height;
+        player.vy = 0;
+        player.onGround = true;
+      }
+
+      if (runner.time % Math.max(48, Math.floor(112 - runner.speed * 5)) === 0) {
+        spawnRunnerObstacle();
+      }
+
+      runner.obstacles.forEach((obstacle) => {
+        obstacle.x -= runner.speed;
+        if (collide({ x: player.x + 8, y: player.y + 8, width: player.width - 16, height: player.height - 12 }, obstacle)) endRunner();
+      });
+      runner.obstacles = runner.obstacles.filter((obstacle) => obstacle.x + obstacle.width > -40);
+
+      runner.particles.forEach((particle) => {
+        particle.x += particle.vx;
+        particle.y += particle.vy;
+        particle.vy += 0.12;
+        particle.life -= 1;
+      });
+      runner.particles = runner.particles.filter((particle) => particle.life > 0);
+    }
+
+    function drawRunnerPlayer() {
+      const player = runner.player;
       ctx.save();
-      ctx.translate(x + player.width / 2, y + player.height / 2);
-      ctx.rotate(player.onGround ? Math.sin(state.time / 8) * 0.03 : -0.12);
+      ctx.translate(player.x + player.width / 2, player.y + player.height / 2);
+      ctx.rotate(player.onGround ? Math.sin(runner.time / 8) * 0.03 : -0.12);
       ctx.translate(-player.width / 2, -player.height / 2);
-
       ctx.fillStyle = "#7fff64";
       ctx.fillRect(8, 12, 34, 34);
       ctx.fillStyle = "#0d0d10";
@@ -348,7 +593,7 @@
       ctx.restore();
     }
 
-    function drawObstacle(obstacle) {
+    function drawRunnerObstacle(obstacle) {
       ctx.fillStyle = "rgba(127,255,100,0.18)";
       ctx.fillRect(obstacle.x - 5, obstacle.y - 5, obstacle.width + 10, obstacle.height + 10);
       ctx.fillStyle = "#0d0d10";
@@ -361,97 +606,495 @@
       ctx.fillRect(obstacle.x + 8, obstacle.y + obstacle.height - 16, obstacle.width - 16, 6);
     }
 
-    function collide(a, b) {
-      return (
-        a.x + 8 < b.x + b.width &&
-        a.x + a.width - 8 > b.x &&
-        a.y + 8 < b.y + b.height &&
-        a.y + a.height - 4 > b.y
-      );
-    }
-
-    function update() {
-      if (!state.running) return;
-
-      state.time += 1;
-      state.score = Math.floor(state.time / 4);
-      state.speed = Math.min(13, 6 + state.score / 180);
-      scoreNode.textContent = state.score;
-
-      player.vy += 0.82;
-      player.y += player.vy;
-      if (player.y >= state.ground - player.height) {
-        player.y = state.ground - player.height;
-        player.vy = 0;
-        player.onGround = true;
-      }
-
-      if (state.time % Math.max(48, Math.floor(112 - state.speed * 5)) === 0) {
-        spawnObstacle();
-      }
-
-      state.obstacles.forEach((obstacle) => {
-        obstacle.x -= state.speed;
-        if (collide(player, obstacle)) endGame();
-      });
-      state.obstacles = state.obstacles.filter((obstacle) => obstacle.x + obstacle.width > -40);
-
-      state.particles.forEach((particle) => {
-        particle.x += particle.vx;
-        particle.y += particle.vy;
-        particle.vy += 0.12;
-        particle.life -= 1;
-      });
-      state.particles = state.particles.filter((particle) => particle.life > 0);
-    }
-
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+    function drawRunner() {
       ctx.strokeStyle = "rgba(127,255,100,0.18)";
       ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.moveTo(0, state.ground + 0.5);
-      ctx.lineTo(canvas.width, state.ground + 0.5);
+      ctx.moveTo(0, runner.ground + 0.5);
+      ctx.lineTo(canvas.width, runner.ground + 0.5);
       ctx.stroke();
 
       ctx.fillStyle = "rgba(127,255,100,0.12)";
       for (let i = 0; i < 34; i += 1) {
-        const x = (i * 92 - (state.time * state.speed * 0.35) % 92);
-        ctx.fillRect(x, state.ground + 18, 38, 2);
+        const x = (i * 92 - (runner.time * runner.speed * 0.35) % 92);
+        ctx.fillRect(x, runner.ground + 18, 38, 2);
       }
 
-      state.particles.forEach((particle) => {
+      runner.particles.forEach((particle) => {
         ctx.globalAlpha = Math.max(0, particle.life / 34);
         ctx.fillStyle = "#7fff64";
         ctx.fillRect(particle.x, particle.y, 4, 4);
         ctx.globalAlpha = 1;
       });
 
-      drawPlayer();
-      state.obstacles.forEach(drawObstacle);
+      drawRunnerPlayer();
+      runner.obstacles.forEach(drawRunnerObstacle);
 
-      if (state.ended) {
+      if (runner.ended) {
         ctx.fillStyle = "rgba(13,13,16,0.42)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
       }
     }
 
+    function resetGalaxy() {
+      Object.assign(galaxy, {
+        running: true,
+        ended: false,
+        time: 0,
+        score: 0,
+        lives: 3,
+        wave: 1,
+        bullets: [],
+        enemyBullets: [],
+        enemies: [],
+        particles: [],
+        powerups: []
+      });
+      galaxy.ship.x = canvas.width / 2;
+      galaxy.ship.y = canvas.height - 78;
+      galaxy.ship.tx = canvas.width / 2;
+      galaxy.ship.ty = canvas.height - 78;
+      galaxy.ship.fire = 0;
+      galaxy.ship.power = 1;
+      pointer.x = galaxy.ship.x;
+      pointer.y = galaxy.ship.y;
+      intro.classList.add("hidden");
+      restartButton.textContent = "Заново";
+      restartButton.classList.add("hidden");
+      modeLabel.textContent = "galaxy shooter";
+      setBest(galaxy.best);
+      setScore(0);
+      spawnWave();
+    }
+
+    function makeStars() {
+      galaxy.stars = Array.from({ length: 90 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 2 + 0.4,
+        speed: Math.random() * 1.8 + 0.4,
+        alpha: Math.random() * 0.6 + 0.25
+      }));
+    }
+
+    function spawnWave() {
+      const cols = Math.min(8, 4 + galaxy.wave);
+      const rows = Math.min(4, 2 + Math.floor(galaxy.wave / 2));
+      const spacingX = 86;
+      const startX = canvas.width / 2 - ((cols - 1) * spacingX) / 2;
+      for (let row = 0; row < rows; row += 1) {
+        for (let col = 0; col < cols; col += 1) {
+          const tough = row === 0 && galaxy.wave > 2 && Math.random() > 0.45;
+          galaxy.enemies.push({
+            x: startX + col * spacingX,
+            y: -120 - row * 82,
+            width: tough ? 58 : 46,
+            height: tough ? 46 : 38,
+            hp: tough ? 3 + Math.floor(galaxy.wave / 3) : 1 + Math.floor(galaxy.wave / 5),
+            maxHp: tough ? 3 + Math.floor(galaxy.wave / 3) : 1 + Math.floor(galaxy.wave / 5),
+            phase: Math.random() * Math.PI * 2,
+            type: tough ? "elite" : "alien",
+            shot: Math.random() * 120
+          });
+        }
+      }
+    }
+
+    function galaxyFire() {
+      const ship = galaxy.ship;
+      const spread = galaxy.ship.power >= 2 ? 13 : 0;
+      galaxy.bullets.push({ x: ship.x, y: ship.y - 46, vx: 0, vy: -12, width: 5, height: 18, color: "#7fff64" });
+      if (galaxy.ship.power >= 2) {
+        galaxy.bullets.push({ x: ship.x - 18, y: ship.y - 36, vx: -0.75, vy: -11.2, width: 4, height: 16, color: "#62c7ff" });
+        galaxy.bullets.push({ x: ship.x + 18, y: ship.y - 36, vx: 0.75, vy: -11.2, width: 4, height: 16, color: "#62c7ff" });
+      }
+      if (galaxy.ship.power >= 3) {
+        galaxy.bullets.push({ x: ship.x - spread, y: ship.y - 42, vx: -1.8, vy: -10.2, width: 4, height: 14, color: "#ff8a3d" });
+        galaxy.bullets.push({ x: ship.x + spread, y: ship.y - 42, vx: 1.8, vy: -10.2, width: 4, height: 14, color: "#ff8a3d" });
+      }
+    }
+
+    function burst(x, y, color, amount = 14) {
+      for (let i = 0; i < amount; i += 1) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 4 + 1;
+        galaxy.particles.push({
+          x,
+          y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          size: Math.random() * 4 + 2,
+          life: Math.random() * 24 + 18,
+          color
+        });
+      }
+    }
+
+    function endGalaxy() {
+      galaxy.running = false;
+      galaxy.ended = true;
+      intro.innerHTML = "<b>Корабель збитий.</b><br>Натисни Заново, Space або тапни, щоб повернутися в бій.";
+      intro.classList.remove("hidden");
+      restartButton.classList.remove("hidden");
+      if (galaxy.score > galaxy.best) {
+        galaxy.best = galaxy.score;
+        localStorage.setItem("vlad-galaxy-best", galaxy.best);
+        setBest(galaxy.best);
+      }
+    }
+
+    function updateGalaxy() {
+      if (!galaxy.running) return;
+      galaxy.time += 1;
+      setScore(galaxy.score);
+
+      const ship = galaxy.ship;
+      if (keys.has("ArrowLeft") || keys.has("KeyA")) ship.tx -= 9;
+      if (keys.has("ArrowRight") || keys.has("KeyD")) ship.tx += 9;
+      if (keys.has("ArrowUp") || keys.has("KeyW")) ship.ty -= 7;
+      if (keys.has("ArrowDown") || keys.has("KeyS")) ship.ty += 7;
+      if (pointer.active) {
+        ship.tx = pointer.x;
+        ship.ty = pointer.y;
+      }
+      ship.tx = Math.max(50, Math.min(canvas.width - 50, ship.tx));
+      ship.ty = Math.max(canvas.height * 0.55, Math.min(canvas.height - 46, ship.ty));
+      ship.x += (ship.tx - ship.x) * 0.14;
+      ship.y += (ship.ty - ship.y) * 0.14;
+
+      ship.fire -= 1;
+      if (ship.fire <= 0) {
+        galaxyFire();
+        ship.fire = Math.max(6, 13 - galaxy.ship.power * 2);
+      }
+
+      galaxy.stars.forEach((star) => {
+        star.y += star.speed + galaxy.wave * 0.08;
+        if (star.y > canvas.height) {
+          star.y = -8;
+          star.x = Math.random() * canvas.width;
+        }
+      });
+
+      galaxy.bullets.forEach((bullet) => {
+        bullet.x += bullet.vx;
+        bullet.y += bullet.vy;
+      });
+      galaxy.bullets = galaxy.bullets.filter((bullet) => bullet.y > -40 && bullet.x > -40 && bullet.x < canvas.width + 40);
+
+      galaxy.enemies.forEach((enemy) => {
+        enemy.phase += 0.035 + galaxy.wave * 0.003;
+        enemy.y += 1.1 + galaxy.wave * 0.12;
+        enemy.x += Math.sin(enemy.phase) * (enemy.type === "elite" ? 1.4 : 2.1);
+        enemy.shot -= 1;
+        if (enemy.shot <= 0 && enemy.y > 20) {
+          galaxy.enemyBullets.push({ x: enemy.x, y: enemy.y + enemy.height / 2, vx: Math.sin(enemy.phase) * 1.4, vy: 4.2 + galaxy.wave * 0.15, width: 7, height: 14 });
+          enemy.shot = 95 + Math.random() * 90;
+        }
+      });
+
+      galaxy.enemyBullets.forEach((bullet) => {
+        bullet.x += bullet.vx;
+        bullet.y += bullet.vy;
+      });
+      galaxy.enemyBullets = galaxy.enemyBullets.filter((bullet) => bullet.y < canvas.height + 40);
+
+      galaxy.powerups.forEach((power) => {
+        power.y += 2.5;
+        power.spin += 0.08;
+      });
+      galaxy.powerups = galaxy.powerups.filter((power) => power.y < canvas.height + 40);
+
+      galaxy.bullets.forEach((bullet) => {
+        const bulletBox = { x: bullet.x - bullet.width / 2, y: bullet.y, width: bullet.width, height: bullet.height };
+        galaxy.enemies.forEach((enemy) => {
+          const enemyBox = { x: enemy.x - enemy.width / 2, y: enemy.y - enemy.height / 2, width: enemy.width, height: enemy.height };
+          if (!enemy.dead && collide(bulletBox, enemyBox)) {
+            bullet.dead = true;
+            enemy.hp -= 1;
+            burst(bullet.x, bullet.y, bullet.color, 5);
+            if (enemy.hp <= 0) {
+              enemy.dead = true;
+              galaxy.score += enemy.type === "elite" ? 70 : 30;
+              burst(enemy.x, enemy.y, enemy.type === "elite" ? "#ff8a3d" : "#7fff64", enemy.type === "elite" ? 24 : 14);
+              if (Math.random() > 0.84) galaxy.powerups.push({ x: enemy.x, y: enemy.y, width: 22, height: 22, spin: 0 });
+            }
+          }
+        });
+      });
+      galaxy.bullets = galaxy.bullets.filter((bullet) => !bullet.dead);
+      galaxy.enemies = galaxy.enemies.filter((enemy) => !enemy.dead && enemy.y < canvas.height + 70);
+
+      const shipBox = { x: ship.x - 25, y: ship.y - 24, width: 50, height: 48 };
+      galaxy.enemyBullets.forEach((bullet) => {
+        if (collide(shipBox, { x: bullet.x - 4, y: bullet.y, width: bullet.width, height: bullet.height }, 4)) {
+          bullet.dead = true;
+          galaxy.lives -= 1;
+          burst(ship.x, ship.y, "#ff8a3d", 20);
+          if (galaxy.lives <= 0) endGalaxy();
+        }
+      });
+      galaxy.enemyBullets = galaxy.enemyBullets.filter((bullet) => !bullet.dead);
+
+      galaxy.enemies.forEach((enemy) => {
+        if (collide(shipBox, { x: enemy.x - enemy.width / 2, y: enemy.y - enemy.height / 2, width: enemy.width, height: enemy.height }, 5)) {
+          enemy.dead = true;
+          galaxy.lives -= 1;
+          burst(ship.x, ship.y, "#ff8a3d", 24);
+          if (galaxy.lives <= 0) endGalaxy();
+        }
+      });
+      galaxy.enemies = galaxy.enemies.filter((enemy) => !enemy.dead);
+
+      galaxy.powerups.forEach((power) => {
+        if (collide(shipBox, { x: power.x - 12, y: power.y - 12, width: 24, height: 24 })) {
+          power.dead = true;
+          galaxy.ship.power = Math.min(3, galaxy.ship.power + 1);
+          galaxy.score += 100;
+          burst(power.x, power.y, "#62c7ff", 18);
+        }
+      });
+      galaxy.powerups = galaxy.powerups.filter((power) => !power.dead);
+
+      galaxy.particles.forEach((particle) => {
+        particle.x += particle.vx;
+        particle.y += particle.vy;
+        particle.vx *= 0.98;
+        particle.vy *= 0.98;
+        particle.life -= 1;
+      });
+      galaxy.particles = galaxy.particles.filter((particle) => particle.life > 0);
+
+      if (galaxy.enemies.length === 0 && galaxy.running) {
+        galaxy.wave += 1;
+        galaxy.score += 150;
+        spawnWave();
+      }
+    }
+
+    function drawShip(x, y) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate((galaxy.ship.x - galaxy.ship.tx) * -0.002);
+
+      ctx.fillStyle = "rgba(98,199,255,0.16)";
+      ctx.beginPath();
+      ctx.ellipse(0, 18, 50, 18, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "#d7dde2";
+      ctx.beginPath();
+      ctx.moveTo(0, -46);
+      ctx.lineTo(20, 18);
+      ctx.lineTo(0, 34);
+      ctx.lineTo(-20, 18);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = "#26323c";
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      ctx.fillStyle = "#2c7fbf";
+      ctx.beginPath();
+      ctx.moveTo(-22, -4);
+      ctx.lineTo(-58, 24);
+      ctx.lineTo(-18, 18);
+      ctx.closePath();
+      ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(22, -4);
+      ctx.lineTo(58, 24);
+      ctx.lineTo(18, 18);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.fillStyle = "#ff8a3d";
+      ctx.fillRect(-12, -5, 24, 28);
+      ctx.fillStyle = "#101217";
+      ctx.fillRect(-8, -30, 16, 18);
+      ctx.fillStyle = "#62c7ff";
+      ctx.fillRect(-5, -27, 10, 12);
+
+      ctx.fillStyle = "#7fff64";
+      ctx.beginPath();
+      ctx.arc(-25, 29, 6, 0, Math.PI * 2);
+      ctx.arc(25, 29, 6, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    function drawEnemy(enemy) {
+      ctx.save();
+      ctx.translate(enemy.x, enemy.y);
+      const scale = enemy.type === "elite" ? 1.15 : 1;
+      ctx.scale(scale, scale);
+      ctx.fillStyle = enemy.type === "elite" ? "#ff8a3d" : "#7fff64";
+      ctx.beginPath();
+      ctx.moveTo(0, 24);
+      ctx.lineTo(26, -6);
+      ctx.lineTo(14, -22);
+      ctx.lineTo(0, -12);
+      ctx.lineTo(-14, -22);
+      ctx.lineTo(-26, -6);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = "#101217";
+      ctx.fillRect(-9, -5, 18, 12);
+      ctx.strokeStyle = "rgba(244,244,239,0.58)";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      if (enemy.maxHp > 1) {
+        ctx.fillStyle = "rgba(244,244,239,0.28)";
+        ctx.fillRect(-22, -34, 44, 4);
+        ctx.fillStyle = "#7fff64";
+        ctx.fillRect(-22, -34, 44 * Math.max(0, enemy.hp / enemy.maxHp), 4);
+      }
+      ctx.restore();
+    }
+
+    function drawGalaxy() {
+      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      gradient.addColorStop(0, "#03050d");
+      gradient.addColorStop(0.55, "#07111c");
+      gradient.addColorStop(1, "#0d0d10");
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      galaxy.stars.forEach((star) => {
+        ctx.globalAlpha = star.alpha;
+        ctx.fillStyle = star.size > 1.8 ? "#f4f4ef" : "#62c7ff";
+        ctx.fillRect(star.x, star.y, star.size, star.size * 2);
+      });
+      ctx.globalAlpha = 1;
+
+      ctx.fillStyle = "rgba(127,255,100,0.16)";
+      ctx.font = "700 13px JetBrains Mono, Consolas, monospace";
+      ctx.fillText(`WAVE ${galaxy.wave}`, 24, 72);
+      ctx.fillText(`LIVES ${galaxy.lives}`, 24, 94);
+      ctx.fillText(`POWER ${galaxy.ship.power}`, 24, 116);
+
+      galaxy.bullets.forEach((bullet) => {
+        ctx.fillStyle = bullet.color;
+        ctx.shadowColor = bullet.color;
+        ctx.shadowBlur = 14;
+        ctx.fillRect(bullet.x - bullet.width / 2, bullet.y, bullet.width, bullet.height);
+        ctx.shadowBlur = 0;
+      });
+
+      galaxy.enemyBullets.forEach((bullet) => {
+        ctx.fillStyle = "#ff8a3d";
+        ctx.shadowColor = "#ff8a3d";
+        ctx.shadowBlur = 12;
+        ctx.fillRect(bullet.x - bullet.width / 2, bullet.y, bullet.width, bullet.height);
+        ctx.shadowBlur = 0;
+      });
+
+      galaxy.enemies.forEach(drawEnemy);
+
+      galaxy.powerups.forEach((power) => {
+        ctx.save();
+        ctx.translate(power.x, power.y);
+        ctx.rotate(power.spin);
+        ctx.strokeStyle = "#62c7ff";
+        ctx.lineWidth = 3;
+        ctx.strokeRect(-12, -12, 24, 24);
+        ctx.fillStyle = "#7fff64";
+        ctx.fillRect(-4, -14, 8, 28);
+        ctx.fillRect(-14, -4, 28, 8);
+        ctx.restore();
+      });
+
+      galaxy.particles.forEach((particle) => {
+        ctx.globalAlpha = Math.max(0, particle.life / 42);
+        ctx.fillStyle = particle.color;
+        ctx.fillRect(particle.x, particle.y, particle.size, particle.size);
+        ctx.globalAlpha = 1;
+      });
+
+      drawShip(galaxy.ship.x, galaxy.ship.y);
+
+      if (galaxy.ended) {
+        ctx.fillStyle = "rgba(13,13,16,0.48)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (activeMode !== "galaxy") return;
+    }
+
+    function drawMenuBackground() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "rgba(127,255,100,0.12)";
+      for (let i = 0; i < 60; i += 1) {
+        const x = (i * 73 + Math.sin(Date.now() * 0.0004 + i) * 30) % canvas.width;
+        const y = (i * 41 + Date.now() * 0.016) % canvas.height;
+        ctx.fillRect(x, y, i % 3 === 0 ? 3 : 2, i % 4 === 0 ? 8 : 3);
+      }
+    }
+
     function loop() {
-      update();
-      draw();
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (activeMode === "menu") drawMenuBackground();
+      if (activeMode === "runner") {
+        updateRunner();
+        drawRunner();
+      }
+      if (activeMode === "galaxy") {
+        updateGalaxy();
+        drawGalaxy();
+      }
       requestAnimationFrame(loop);
     }
 
-    window.addEventListener("keydown", (event) => {
-      if (event.code === "Space" || event.code === "ArrowUp") {
-        event.preventDefault();
-        jump();
-      }
+    document.querySelectorAll("[data-mode]").forEach((button) => {
+      button.addEventListener("click", () => startMode(button.dataset.mode));
     });
 
-    canvas.addEventListener("pointerdown", jump);
-    restartButton.addEventListener("click", resetGame);
+    restartButton.addEventListener("click", () => {
+      if (activeMode === "runner") resetRunner();
+      if (activeMode === "galaxy") resetGalaxy();
+    });
+
+    backButton.addEventListener("click", showMenu);
+
+    window.addEventListener("keydown", (event) => {
+      keys.add(event.code);
+      if (event.code === "Space" || event.code === "ArrowUp") {
+        event.preventDefault();
+        if (activeMode === "runner") runnerJump();
+        if (activeMode === "galaxy" && !galaxy.running) resetGalaxy();
+      }
+      if (event.code === "Escape") showMenu();
+    });
+
+    window.addEventListener("keyup", (event) => {
+      keys.delete(event.code);
+    });
+
+    canvas.addEventListener("pointerdown", (event) => {
+      const rect = canvas.getBoundingClientRect();
+      pointer.active = true;
+      pointer.x = (event.clientX - rect.left) * (canvas.width / rect.width);
+      pointer.y = (event.clientY - rect.top) * (canvas.height / rect.height);
+      if (activeMode === "runner") runnerJump();
+      if (activeMode === "galaxy" && !galaxy.running) resetGalaxy();
+    });
+
+    canvas.addEventListener("pointermove", (event) => {
+      const rect = canvas.getBoundingClientRect();
+      pointer.x = (event.clientX - rect.left) * (canvas.width / rect.width);
+      pointer.y = (event.clientY - rect.top) * (canvas.height / rect.height);
+    });
+
+    canvas.addEventListener("pointerleave", () => {
+      pointer.active = false;
+    });
+
+    makeStars();
+    showMenu();
     loop();
   </script>
 </body>

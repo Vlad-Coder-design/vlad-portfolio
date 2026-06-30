@@ -1,4 +1,4 @@
-const CACHE_NAME = "vlad-portfolio-offline-v1";
+const CACHE_NAME = "vlad-portfolio-offline-v2";
 const APP_SHELL = [
   "./",
   "./index.html",
