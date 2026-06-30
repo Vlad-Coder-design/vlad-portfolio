@@ -283,49 +283,81 @@
     }
 
     @media (max-width: 720px) {
+      body {
+        overflow: hidden;
+      }
+
       .offline-shell {
-        padding: 14px;
+        min-height: 100dvh;
+        padding: 10px;
+        grid-template-rows: auto 1fr auto;
+        gap: 8px;
       }
 
       .topbar,
       .game-footer,
       .hud {
-        font-size: 0.62rem;
+        font-size: 0.58rem;
+      }
+
+      .brand {
+        font-size: 0.84rem;
       }
 
       .game-stage {
-        min-height: 72vh;
+        min-height: calc(100dvh - 92px);
       }
 
       canvas {
-        height: 62vh;
+        width: 100%;
+        height: calc(100dvh - 148px);
+        min-height: 420px;
+      }
+
+      .hud {
+        inset: 10px 10px auto 10px;
+        flex-wrap: wrap;
+        row-gap: 4px;
+      }
+
+      .mode-menu {
+        padding: 12px;
+        overflow-y: auto;
       }
 
       .mode-grid {
         grid-template-columns: 1fr;
+        gap: 10px;
       }
 
       .mode-title {
+        font-size: clamp(2rem, 13vw, 3.5rem);
         margin-bottom: 18px;
       }
 
       .mode-card {
-        min-height: 150px;
+        min-height: 132px;
+        padding: 15px;
       }
 
       .intro {
         inset-inline: 14px;
-        bottom: 76px;
+        bottom: 68px;
+        font-size: 0.96rem;
       }
 
       .game-button {
         right: 14px;
-        bottom: 18px;
+        bottom: 12px;
+        min-height: 38px;
+        padding: 0 12px;
       }
 
       .back-button {
         left: 14px;
-        top: 50px;
+        top: 42px;
+        min-height: 30px;
+        padding: 0 10px;
       }
     }
   </style>
@@ -416,6 +448,9 @@
       score: 0,
       lives: 3,
       wave: 1,
+      level: 1,
+      xp: 0,
+      victory: false,
       best: Number(localStorage.getItem("vlad-galaxy-best") || 0),
       stars: [],
       bullets: [],
@@ -644,6 +679,9 @@
         score: 0,
         lives: 3,
         wave: 1,
+        level: 1,
+        xp: 0,
+        victory: false,
         bullets: [],
         enemyBullets: [],
         enemies: [],
@@ -667,6 +705,28 @@
       spawnWave();
     }
 
+    function addGalaxyXp(amount) {
+      if (galaxy.level >= 100) return;
+
+      galaxy.xp += amount;
+      let needed = 80 + galaxy.level * 28;
+      while (galaxy.xp >= needed && galaxy.level < 100) {
+        galaxy.xp -= needed;
+        galaxy.level += 1;
+        galaxy.ship.power = galaxy.level;
+        galaxy.score += 60 + galaxy.level * 5;
+        burst(galaxy.ship.x, galaxy.ship.y - 20, galaxy.level >= 100 ? "#ff8a3d" : "#62c7ff", 22);
+        if (galaxy.level % 10 === 0) galaxy.lives = Math.min(6, galaxy.lives + 1);
+        needed = 80 + galaxy.level * 28;
+      }
+
+      if (galaxy.level >= 100) {
+        galaxy.level = 100;
+        galaxy.xp = 0;
+        galaxy.ship.power = 100;
+      }
+    }
+
     function makeStars() {
       galaxy.stars = Array.from({ length: 90 }, () => ({
         x: Math.random() * canvas.width,
@@ -678,6 +738,22 @@
     }
 
     function spawnWave() {
+      if (galaxy.wave >= 100) {
+        galaxy.enemies.push({
+          x: canvas.width / 2,
+          y: -170,
+          width: 250,
+          height: 135,
+          hp: 6200,
+          maxHp: 6200,
+          phase: 0,
+          type: "boss",
+          shot: 50,
+          dead: false
+        });
+        return;
+      }
+
       const cols = Math.min(8, 4 + galaxy.wave);
       const rows = Math.min(4, 2 + Math.floor(galaxy.wave / 2));
       const spacingX = 86;
@@ -690,8 +766,8 @@
             y: -120 - row * 82,
             width: tough ? 58 : 46,
             height: tough ? 46 : 38,
-            hp: tough ? 3 + Math.floor(galaxy.wave / 3) : 1 + Math.floor(galaxy.wave / 5),
-            maxHp: tough ? 3 + Math.floor(galaxy.wave / 3) : 1 + Math.floor(galaxy.wave / 5),
+            hp: tough ? 3 + Math.floor(galaxy.wave / 2.5) : 1 + Math.floor(galaxy.wave / 4),
+            maxHp: tough ? 3 + Math.floor(galaxy.wave / 2.5) : 1 + Math.floor(galaxy.wave / 4),
             phase: Math.random() * Math.PI * 2,
             type: tough ? "elite" : "alien",
             shot: Math.random() * 120
@@ -702,15 +778,37 @@
 
     function galaxyFire() {
       const ship = galaxy.ship;
-      const spread = galaxy.ship.power >= 2 ? 13 : 0;
-      galaxy.bullets.push({ x: ship.x, y: ship.y - 46, vx: 0, vy: -12, width: 5, height: 18, color: "#7fff64" });
-      if (galaxy.ship.power >= 2) {
-        galaxy.bullets.push({ x: ship.x - 18, y: ship.y - 36, vx: -0.75, vy: -11.2, width: 4, height: 16, color: "#62c7ff" });
-        galaxy.bullets.push({ x: ship.x + 18, y: ship.y - 36, vx: 0.75, vy: -11.2, width: 4, height: 16, color: "#62c7ff" });
+      const level = galaxy.level;
+      const lanes = Math.min(23, 1 + Math.floor(level / 5) * 2);
+      const spread = Math.min(92, 13 + level * 0.9);
+      const speed = 12 + Math.min(5, level / 22);
+
+      for (let i = 0; i < lanes; i += 1) {
+        const center = (lanes - 1) / 2;
+        const offset = lanes === 1 ? 0 : ((i - center) / center) * spread;
+        const angle = lanes === 1 ? 0 : ((i - center) / center) * (0.85 + Math.min(0.55, level / 150));
+        const color = i % 3 === 0 ? "#7fff64" : i % 3 === 1 ? "#62c7ff" : "#ff8a3d";
+        galaxy.bullets.push({
+          x: ship.x + offset * 0.32,
+          y: ship.y - 48 - Math.abs(offset) * 0.08,
+          vx: Math.sin(angle) * 2.7,
+          vy: -speed + Math.abs(angle) * 0.85,
+          width: level > 70 ? 5 : 4,
+          height: level > 45 ? 22 : 17,
+          damage: 1 + Math.floor(level / 18),
+          color
+        });
       }
-      if (galaxy.ship.power >= 3) {
-        galaxy.bullets.push({ x: ship.x - spread, y: ship.y - 42, vx: -1.8, vy: -10.2, width: 4, height: 14, color: "#ff8a3d" });
-        galaxy.bullets.push({ x: ship.x + spread, y: ship.y - 42, vx: 1.8, vy: -10.2, width: 4, height: 14, color: "#ff8a3d" });
+
+      if (level >= 35) {
+        galaxy.bullets.push({ x: ship.x - 32, y: ship.y - 20, vx: -2.8, vy: -9.6, width: 5, height: 20, damage: 2 + Math.floor(level / 20), color: "#f4f4ef" });
+        galaxy.bullets.push({ x: ship.x + 32, y: ship.y - 20, vx: 2.8, vy: -9.6, width: 5, height: 20, damage: 2 + Math.floor(level / 20), color: "#f4f4ef" });
+      }
+
+      if (level >= 70) {
+        for (let i = -1; i <= 1; i += 1) {
+          galaxy.bullets.push({ x: ship.x + i * 18, y: ship.y - 58, vx: i * 0.45, vy: -16, width: 7, height: 28, damage: 5, color: "#7fff64" });
+        }
       }
     }
 
@@ -743,6 +841,23 @@
       }
     }
 
+    function winGalaxy() {
+      galaxy.running = false;
+      galaxy.ended = true;
+      galaxy.victory = true;
+      galaxy.score += 10000;
+      intro.innerHTML = "<b>Галактика врятована.</b><br>Ти дійшов до 100 хвилі, знищив босса і пройшов шутер.";
+      intro.classList.remove("hidden");
+      restartButton.textContent = "Ще раз";
+      restartButton.classList.remove("hidden");
+      burst(galaxy.ship.x, galaxy.ship.y - 70, "#7fff64", 80);
+      if (galaxy.score > galaxy.best) {
+        galaxy.best = galaxy.score;
+        localStorage.setItem("vlad-galaxy-best", galaxy.best);
+        setBest(galaxy.best);
+      }
+    }
+
     function updateGalaxy() {
       if (!galaxy.running) return;
       galaxy.time += 1;
@@ -765,7 +880,7 @@
       ship.fire -= 1;
       if (ship.fire <= 0) {
         galaxyFire();
-        ship.fire = Math.max(6, 13 - galaxy.ship.power * 2);
+        ship.fire = Math.max(3, 12 - Math.floor(galaxy.level / 12));
       }
 
       galaxy.stars.forEach((star) => {
@@ -784,12 +899,24 @@
 
       galaxy.enemies.forEach((enemy) => {
         enemy.phase += 0.035 + galaxy.wave * 0.003;
-        enemy.y += 1.1 + galaxy.wave * 0.12;
-        enemy.x += Math.sin(enemy.phase) * (enemy.type === "elite" ? 1.4 : 2.1);
+        if (enemy.type === "boss") {
+          enemy.y += enemy.y < 118 ? 1.35 : 0;
+          enemy.x = canvas.width / 2 + Math.sin(enemy.phase * 0.45) * 115;
+        } else {
+          enemy.y += 1.1 + galaxy.wave * 0.12;
+          enemy.x += Math.sin(enemy.phase) * (enemy.type === "elite" ? 1.4 : 2.1);
+        }
         enemy.shot -= 1;
         if (enemy.shot <= 0 && enemy.y > 20) {
-          galaxy.enemyBullets.push({ x: enemy.x, y: enemy.y + enemy.height / 2, vx: Math.sin(enemy.phase) * 1.4, vy: 4.2 + galaxy.wave * 0.15, width: 7, height: 14 });
-          enemy.shot = 95 + Math.random() * 90;
+          if (enemy.type === "boss") {
+            for (let i = -4; i <= 4; i += 1) {
+              galaxy.enemyBullets.push({ x: enemy.x + i * 24, y: enemy.y + 56, vx: i * 0.55, vy: 4.6 + Math.abs(i) * 0.18, width: 9, height: 18 });
+            }
+            enemy.shot = 28;
+          } else {
+            galaxy.enemyBullets.push({ x: enemy.x, y: enemy.y + enemy.height / 2, vx: Math.sin(enemy.phase) * 1.4, vy: 4.2 + galaxy.wave * 0.15, width: 7, height: 14 });
+            enemy.shot = 95 + Math.random() * 90;
+          }
         }
       });
 
@@ -811,13 +938,19 @@
           const enemyBox = { x: enemy.x - enemy.width / 2, y: enemy.y - enemy.height / 2, width: enemy.width, height: enemy.height };
           if (!enemy.dead && collide(bulletBox, enemyBox)) {
             bullet.dead = true;
-            enemy.hp -= 1;
+            enemy.hp -= bullet.damage || 1;
             burst(bullet.x, bullet.y, bullet.color, 5);
             if (enemy.hp <= 0) {
               enemy.dead = true;
+              if (enemy.type === "boss") {
+                burst(enemy.x, enemy.y, "#ff8a3d", 120);
+                winGalaxy();
+                return;
+              }
               galaxy.score += enemy.type === "elite" ? 70 : 30;
+              addGalaxyXp(enemy.type === "elite" ? 24 : 12);
               burst(enemy.x, enemy.y, enemy.type === "elite" ? "#ff8a3d" : "#7fff64", enemy.type === "elite" ? 24 : 14);
-              if (Math.random() > 0.84) galaxy.powerups.push({ x: enemy.x, y: enemy.y, width: 22, height: 22, spin: 0 });
+              if (Math.random() > 0.78) galaxy.powerups.push({ x: enemy.x, y: enemy.y, width: 22, height: 22, spin: 0 });
             }
           }
         });
@@ -849,7 +982,7 @@
       galaxy.powerups.forEach((power) => {
         if (collide(shipBox, { x: power.x - 12, y: power.y - 12, width: 24, height: 24 })) {
           power.dead = true;
-          galaxy.ship.power = Math.min(3, galaxy.ship.power + 1);
+          addGalaxyXp(70);
           galaxy.score += 100;
           burst(power.x, power.y, "#62c7ff", 18);
         }
@@ -866,8 +999,9 @@
       galaxy.particles = galaxy.particles.filter((particle) => particle.life > 0);
 
       if (galaxy.enemies.length === 0 && galaxy.running) {
-        galaxy.wave += 1;
+        galaxy.wave = Math.min(100, galaxy.wave + 1);
         galaxy.score += 150;
+        addGalaxyXp(35);
         spawnWave();
       }
     }
@@ -927,6 +1061,41 @@
     function drawEnemy(enemy) {
       ctx.save();
       ctx.translate(enemy.x, enemy.y);
+      if (enemy.type === "boss") {
+        ctx.fillStyle = "rgba(255,138,61,0.16)";
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 160, 86, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#5e7281";
+        ctx.beginPath();
+        ctx.moveTo(0, -74);
+        ctx.lineTo(136, 12);
+        ctx.lineTo(78, 72);
+        ctx.lineTo(0, 48);
+        ctx.lineTo(-78, 72);
+        ctx.lineTo(-136, 12);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = "#f4f4ef";
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        ctx.fillStyle = "#ff8a3d";
+        ctx.fillRect(-88, -8, 44, 34);
+        ctx.fillRect(44, -8, 44, 34);
+        ctx.fillStyle = "#101217";
+        ctx.fillRect(-35, -34, 70, 42);
+        ctx.fillStyle = "#62c7ff";
+        ctx.fillRect(-26, -26, 52, 24);
+        ctx.fillStyle = "rgba(244,244,239,0.28)";
+        ctx.fillRect(-130, -105, 260, 10);
+        ctx.fillStyle = "#ff8a3d";
+        ctx.fillRect(-130, -105, 260 * Math.max(0, enemy.hp / enemy.maxHp), 10);
+        ctx.fillStyle = "#f4f4ef";
+        ctx.font = "700 13px JetBrains Mono, Consolas, monospace";
+        ctx.fillText("FINAL BOSS", -48, -116);
+        ctx.restore();
+        return;
+      }
       const scale = enemy.type === "elite" ? 1.15 : 1;
       ctx.scale(scale, scale);
       ctx.fillStyle = enemy.type === "elite" ? "#ff8a3d" : "#7fff64";
@@ -972,7 +1141,12 @@
       ctx.font = "700 13px JetBrains Mono, Consolas, monospace";
       ctx.fillText(`WAVE ${galaxy.wave}`, 24, 72);
       ctx.fillText(`LIVES ${galaxy.lives}`, 24, 94);
-      ctx.fillText(`POWER ${galaxy.ship.power}`, 24, 116);
+      ctx.fillText(`LVL ${galaxy.level}/100`, 24, 116);
+      ctx.fillStyle = "rgba(244,244,239,0.18)";
+      ctx.fillRect(24, 126, 128, 5);
+      ctx.fillStyle = galaxy.level >= 100 ? "#ff8a3d" : "#7fff64";
+      const xpNeed = 80 + galaxy.level * 28;
+      ctx.fillRect(24, 126, 128 * (galaxy.level >= 100 ? 1 : Math.min(1, galaxy.xp / xpNeed)), 5);
 
       galaxy.bullets.forEach((bullet) => {
         ctx.fillStyle = bullet.color;
