@@ -55,6 +55,7 @@
 
     body.target-cursor-enabled,
     body.target-cursor-enabled a,
+    body.target-cursor-enabled button,
     body.target-cursor-enabled .cursor-target {
       cursor: none;
     }
@@ -67,12 +68,6 @@
     ::selection {
       color: var(--bg);
       background: var(--accent);
-    }
-
-    html,
-    body,
-    body * {
-      cursor: none !important;
     }
 
     .container {
@@ -515,6 +510,11 @@
       position: relative;
       padding: 0;
       overflow: visible;
+      cursor: none;
+    }
+
+    .effects-orbit-link * {
+      cursor: none;
     }
 
     .effects-orbit-link::before,

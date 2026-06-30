@@ -70,12 +70,6 @@
       background: var(--accent);
     }
 
-    html,
-    body,
-    body * {
-      cursor: none !important;
-    }
-
     .container {
       width: min(calc(100% - 40px), var(--max-width));
       margin-inline: auto;
@@ -274,6 +268,11 @@
       position: relative;
       padding: 0;
       overflow: visible;
+      cursor: none;
+    }
+
+    .effects-orbit-link * {
+      cursor: none;
     }
 
     .effects-orbit-link::before,
@@ -349,11 +348,6 @@
       border-bottom: 1px solid var(--line);
       overflow: hidden;
       isolation: isolate;
-      cursor: none;
-    }
-
-    .hero * {
-      cursor: none;
     }
 
     .field-canvas {
@@ -461,6 +455,43 @@
       letter-spacing: -0.07em;
     }
 
+    .falling-title {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: 0 0.18em;
+      max-width: 760px;
+      perspective: 700px;
+    }
+
+    .falling-title .falling-line {
+      display: flex;
+      width: 100%;
+      min-height: 0.94em;
+    }
+
+    .falling-title .falling-piece {
+      display: inline-block;
+      min-width: 0.08em;
+      transform-origin: center top;
+      animation: falling-idle 2.6s ease-in-out infinite;
+      animation-delay: calc(var(--fall-index) * 55ms);
+      will-change: transform, opacity;
+    }
+
+    .falling-title .falling-space {
+      width: 0.28em;
+    }
+
+    .effects-section:hover .falling-title .falling-piece,
+    .falling-title.is-falling .falling-piece {
+      animation-name: falling-drop;
+      animation-duration: 1.35s;
+      animation-timing-function: cubic-bezier(0.17, 0.67, 0.28, 1.15);
+      animation-iteration-count: infinite;
+      animation-delay: calc(var(--fall-index) * 42ms);
+    }
+
     .effects-grid {
       display: grid;
       grid-template-columns: repeat(12, 1fr);
@@ -486,7 +517,9 @@
     }
 
     [data-spark-card],
-    [data-spark-card] * {
+    [data-spark-card] *,
+    [data-ripple-card],
+    [data-ripple-card] * {
       cursor: pointer !important;
     }
 
@@ -522,6 +555,39 @@
       max-width: 470px;
       color: var(--muted);
       font-size: 0.9rem;
+    }
+
+    .ballpit-card {
+      min-height: 320px;
+      background:
+        radial-gradient(circle at var(--card-x, 50%) var(--card-y, 50%), rgba(127, 255, 100, 0.18), transparent 38%),
+        linear-gradient(145deg, rgba(127, 255, 100, 0.06), rgba(255, 255, 255, 0.012));
+    }
+
+    .ballpit-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      opacity: 0.95;
+      pointer-events: none;
+    }
+
+    .ballpit-card .effect-number,
+    .ballpit-card h2,
+    .ballpit-card p {
+      position: relative;
+      z-index: 1;
+      text-shadow: 0 2px 18px rgba(0, 0, 0, 0.72);
+    }
+
+    .ballpit-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(180deg, rgba(5, 5, 7, 0.62), transparent 44%, rgba(5, 5, 7, 0.16));
     }
 
     .orbital {
@@ -685,6 +751,356 @@
       animation-delay: calc(var(--i) * 95ms);
     }
 
+    .scan-panel {
+      position: absolute;
+      right: 24px;
+      bottom: 24px;
+      width: min(300px, 50%);
+      height: 135px;
+      border: 1px solid rgba(127, 255, 100, 0.24);
+      background:
+        linear-gradient(rgba(127, 255, 100, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(127, 255, 100, 0.08) 1px, transparent 1px),
+        rgba(0, 0, 0, 0.22);
+      background-size: 18px 18px;
+      overflow: hidden;
+    }
+
+    .scan-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent, rgba(127, 255, 100, 0.38), transparent);
+      transform: translateY(-100%);
+      animation: scan-sweep 2.6s linear infinite;
+    }
+
+    .scan-panel::after {
+      content: "";
+      position: absolute;
+      inset: 18px;
+      border: 1px solid rgba(127, 255, 100, 0.42);
+      box-shadow: inset 0 0 22px rgba(127, 255, 100, 0.12);
+    }
+
+    .matrix-rain {
+      position: absolute;
+      inset: auto 24px 20px auto;
+      width: min(300px, 52%);
+      height: 150px;
+      display: flex;
+      justify-content: space-between;
+      overflow: hidden;
+      color: var(--accent);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.76rem;
+      opacity: 0.92;
+      mask-image: linear-gradient(transparent, #000 18%, #000 78%, transparent);
+    }
+
+    .matrix-rain span {
+      writing-mode: vertical-rl;
+      text-orientation: upright;
+      animation: matrix-drop 2.4s linear infinite;
+      animation-delay: calc(var(--i) * -240ms);
+      text-shadow: 0 0 14px rgba(127, 255, 100, 0.7);
+    }
+
+    .ripple-field {
+      position: absolute;
+      right: 26px;
+      bottom: 22px;
+      width: min(260px, 46%);
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+    }
+
+    .ripple-field span {
+      position: absolute;
+      width: calc(38px + var(--i) * 34px);
+      aspect-ratio: 1;
+      border: 1px solid rgba(127, 255, 100, 0.26);
+      border-radius: 50%;
+      animation: ripple-loop 2.9s ease-out infinite;
+      animation-delay: calc(var(--i) * -260ms);
+    }
+
+    .ripple-pop {
+      position: absolute;
+      width: 18px;
+      aspect-ratio: 1;
+      border: 1px solid rgba(127, 255, 100, 0.85);
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      animation: ripple-pop 640ms ease-out forwards;
+      box-shadow: 0 0 18px rgba(127, 255, 100, 0.45);
+    }
+
+    .constellation {
+      position: absolute;
+      right: 22px;
+      bottom: 20px;
+      width: min(340px, 54%);
+      height: 170px;
+      overflow: visible;
+    }
+
+    .constellation path {
+      fill: none;
+      stroke: rgba(127, 255, 100, 0.38);
+      stroke-width: 1.2;
+      stroke-dasharray: 16 42;
+      animation: constellation-line 3.2s linear infinite;
+    }
+
+    .constellation circle {
+      fill: var(--accent);
+      filter: drop-shadow(0 0 10px rgba(127, 255, 100, 0.85));
+      animation: constellation-star 2.3s ease-in-out infinite;
+      animation-delay: calc(var(--i) * 130ms);
+    }
+
+    .laser-grid {
+      position: absolute;
+      right: 24px;
+      bottom: 22px;
+      width: min(330px, 54%);
+      height: 170px;
+      border: 1px solid rgba(127, 255, 100, 0.22);
+      background:
+        linear-gradient(90deg, transparent 0 23px, rgba(127, 255, 100, 0.14) 24px 25px, transparent 26px),
+        linear-gradient(0deg, transparent 0 23px, rgba(127, 255, 100, 0.14) 24px 25px, transparent 26px);
+      background-size: 32px 32px;
+      overflow: hidden;
+      box-shadow: inset 0 0 28px rgba(127, 255, 100, 0.08);
+    }
+
+    .laser-grid::before,
+    .laser-grid::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(127, 255, 100, 0.7), transparent);
+      transform: translateX(-110%);
+      animation: laser-scan-x 2.7s linear infinite;
+    }
+
+    .laser-grid::after {
+      background: linear-gradient(0deg, transparent, rgba(127, 255, 100, 0.5), transparent);
+      transform: translateY(110%);
+      animation: laser-scan-y 3.4s linear infinite;
+    }
+
+    .holo-stack {
+      position: absolute;
+      right: 34px;
+      bottom: 30px;
+      width: min(280px, 48%);
+      height: 150px;
+      display: grid;
+      place-items: center;
+      perspective: 520px;
+    }
+
+    .holo-stack span {
+      position: absolute;
+      width: calc(48px + var(--i) * 34px);
+      height: calc(24px + var(--i) * 15px);
+      border: 1px solid rgba(127, 255, 100, 0.42);
+      border-radius: 50%;
+      transform: rotateX(67deg) translateZ(calc(var(--i) * 12px));
+      animation: holo-float 2.8s ease-in-out infinite;
+      animation-delay: calc(var(--i) * -170ms);
+      box-shadow: 0 0 18px rgba(127, 255, 100, 0.16);
+    }
+
+    .glitch-word {
+      position: absolute;
+      right: 28px;
+      bottom: 38px;
+      color: var(--text);
+      font-size: clamp(2.4rem, 8vw, 6.6rem);
+      font-weight: 900;
+      line-height: 0.85;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      animation: glitch-shift 1.9s steps(2, end) infinite;
+    }
+
+    .glitch-word::before,
+    .glitch-word::after {
+      content: attr(data-text);
+      position: absolute;
+      inset: 0;
+      color: var(--accent);
+      mix-blend-mode: screen;
+      clip-path: inset(0 0 58% 0);
+      transform: translate(-4px, -2px);
+      animation: glitch-slice 1.2s steps(2, end) infinite;
+    }
+
+    .glitch-word::after {
+      color: #bfefff;
+      clip-path: inset(48% 0 0 0);
+      transform: translate(4px, 2px);
+      animation-delay: -420ms;
+    }
+
+    .radar-scope {
+      position: absolute;
+      right: 30px;
+      bottom: 24px;
+      width: min(260px, 46%);
+      aspect-ratio: 1;
+      border: 1px solid rgba(127, 255, 100, 0.42);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle, transparent 0 28%, rgba(127, 255, 100, 0.18) 29% 30%, transparent 31% 52%, rgba(127, 255, 100, 0.18) 53% 54%, transparent 55%),
+        linear-gradient(90deg, transparent 49%, rgba(127, 255, 100, 0.25) 50%, transparent 51%),
+        linear-gradient(0deg, transparent 49%, rgba(127, 255, 100, 0.25) 50%, transparent 51%);
+      overflow: hidden;
+      box-shadow: inset 0 0 36px rgba(127, 255, 100, 0.1), 0 0 28px rgba(127, 255, 100, 0.12);
+    }
+
+    .radar-scope::before {
+      content: "";
+      position: absolute;
+      inset: 50% 50% 0 0;
+      background: linear-gradient(45deg, rgba(127, 255, 100, 0.55), transparent 72%);
+      transform-origin: right top;
+      animation: radar-sweep 2.5s linear infinite;
+    }
+
+    .radar-scope span {
+      position: absolute;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 14px rgba(127, 255, 100, 0.85);
+      animation: radar-dot 2.1s ease-in-out infinite;
+      animation-delay: calc(var(--i) * 240ms);
+    }
+
+    .galaxy-section {
+      position: relative;
+      min-height: 760px;
+      display: grid;
+      align-items: center;
+      overflow: hidden;
+      border-bottom: 1px solid var(--line);
+      background: #020204;
+      isolation: isolate;
+    }
+
+    .galaxy-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      opacity: 0.96;
+    }
+
+    .galaxy-section::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 50% 48%, transparent 0 34%, rgba(2, 2, 4, 0.22) 58%, rgba(2, 2, 4, 0.86) 100%),
+        linear-gradient(180deg, rgba(13, 13, 16, 0.9), transparent 24%, rgba(13, 13, 16, 0.72));
+      z-index: 1;
+    }
+
+    .galaxy-content {
+      position: relative;
+      z-index: 2;
+      max-width: 780px;
+      padding: 140px 0;
+    }
+
+    .galaxy-title,
+    .galaxy-copy {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(18px);
+      transition: opacity 420ms ease, transform 420ms ease;
+    }
+
+    .galaxy-section.galaxy-text-visible .galaxy-title,
+    .galaxy-section.galaxy-text-visible .galaxy-copy {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .galaxy-ship {
+      position: absolute;
+      z-index: 2;
+      left: var(--ship-x, 72%);
+      top: var(--ship-y, 46%);
+      width: clamp(150px, 17vw, 250px);
+      height: auto;
+      pointer-events: none;
+      opacity: 0;
+      transform: translate3d(-50%, -50%, 0) rotate(var(--ship-tilt, -8deg)) scale(0.72);
+      transition:
+        left 760ms cubic-bezier(0.2, 0.82, 0.2, 1),
+        top 760ms cubic-bezier(0.2, 0.82, 0.2, 1),
+        opacity 520ms ease,
+        transform 900ms cubic-bezier(0.2, 0.8, 0.2, 1);
+      filter: drop-shadow(0 0 24px rgba(127, 255, 100, 0.28)) drop-shadow(0 16px 36px rgba(0, 0, 0, 0.42));
+    }
+
+    .galaxy-section.galaxy-ship-visible .galaxy-ship {
+      opacity: 1;
+      transform: translate3d(-50%, -50%, 0) rotate(var(--ship-tilt, -8deg)) scale(1);
+    }
+
+    .galaxy-ship svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      overflow: visible;
+    }
+
+    .ship-thruster {
+      transform-origin: 174px 74px;
+      animation: ship-thrust 360ms ease-in-out infinite;
+    }
+
+    .ship-glow {
+      animation: ship-glow 1.9s ease-in-out infinite;
+    }
+
+    .ship-window {
+      animation: ship-window 2.4s ease-in-out infinite;
+    }
+
+    @media (max-width: 720px) {
+      .galaxy-ship {
+        width: 132px;
+      }
+    }
+
+    .galaxy-title {
+      margin-top: 18px;
+      font-size: clamp(4.2rem, 11vw, 10rem);
+      line-height: 0.82;
+      letter-spacing: -0.075em;
+      text-transform: uppercase;
+    }
+
+    .galaxy-copy {
+      max-width: 560px;
+      margin-top: 34px;
+      color: var(--muted);
+      font-size: clamp(1rem, 1.6vw, 1.32rem);
+      line-height: 1.55;
+    }
+
     .spark-zone {
       position: absolute;
       inset: 0;
@@ -819,6 +1235,106 @@
         opacity: 0;
         transform: translate(var(--sx), var(--sy)) scale(0.2);
       }
+    }
+
+    @keyframes falling-idle {
+      50% { transform: translateY(-0.05em) rotateZ(1.5deg); }
+    }
+
+    @keyframes falling-drop {
+      0% {
+        opacity: 1;
+        transform: translateY(0) rotateZ(0deg) rotateX(0deg);
+      }
+      42% {
+        opacity: 0.95;
+        transform: translateY(0.92em) rotateZ(calc(var(--fall-rotate) * 0.7deg)) rotateX(42deg);
+      }
+      68% {
+        opacity: 1;
+        transform: translateY(0.46em) rotateZ(calc(var(--fall-rotate) * -0.28deg)) rotateX(-12deg);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) rotateZ(0deg) rotateX(0deg);
+      }
+    }
+
+    @keyframes ship-thrust {
+      50% { opacity: 0.38; transform: scaleX(0.68); }
+    }
+
+    @keyframes ship-glow {
+      50% { opacity: 0.5; }
+    }
+
+    @keyframes ship-window {
+      50% { opacity: 0.58; }
+    }
+
+    @keyframes scan-sweep {
+      to { transform: translateY(100%); }
+    }
+
+    @keyframes matrix-drop {
+      from { transform: translateY(-110%); opacity: 0; }
+      12% { opacity: 1; }
+      to { transform: translateY(110%); opacity: 0.18; }
+    }
+
+    @keyframes ripple-loop {
+      0% { opacity: 0; transform: scale(0.6); }
+      25% { opacity: 0.82; }
+      100% { opacity: 0; transform: scale(1.35); }
+    }
+
+    @keyframes ripple-pop {
+      to { width: 150px; opacity: 0; }
+    }
+
+    @keyframes constellation-line {
+      to { stroke-dashoffset: -58; }
+    }
+
+    @keyframes constellation-star {
+      50% { opacity: 0.35; transform: scale(0.72); }
+    }
+
+    @keyframes laser-scan-x {
+      to { transform: translateX(110%); }
+    }
+
+    @keyframes laser-scan-y {
+      to { transform: translateY(-110%); }
+    }
+
+    @keyframes holo-float {
+      50% {
+        opacity: 0.42;
+        transform: rotateX(67deg) translateZ(calc(var(--i) * 18px)) scale(1.08);
+      }
+    }
+
+    @keyframes glitch-shift {
+      0%, 100% { transform: skewX(0deg); }
+      22% { transform: skewX(-7deg); }
+      24% { transform: skewX(6deg); }
+      26% { transform: skewX(0deg); }
+    }
+
+    @keyframes glitch-slice {
+      0%, 100% { opacity: 0; transform: translate(0, 0); }
+      18% { opacity: 0.9; transform: translate(-5px, 1px); }
+      20% { opacity: 0.45; transform: translate(7px, -1px); }
+      22% { opacity: 0; transform: translate(0, 0); }
+    }
+
+    @keyframes radar-sweep {
+      to { transform: rotate(1turn); }
+    }
+
+    @keyframes radar-dot {
+      50% { opacity: 0.28; transform: scale(0.65); }
     }
 
     @keyframes eye-spin {
@@ -1012,6 +1528,220 @@
         </div>
       </div>
     </section>
+
+    <section class="effects-section">
+      <div class="container">
+        <div class="section-heading">
+          <p class="section-label">05 / BALLPIT</p>
+          <h2 class="section-title falling-title" data-copy="secondSectionTitle" data-falling-title>Яма<br>кульок.</h2>
+        </div>
+        <div class="effects-grid">
+          <article class="effect-card ballpit-card" data-tilt>
+            <canvas class="ballpit-canvas" data-ballpit="soft" aria-hidden="true"></canvas>
+            <span class="effect-number">05 / BALLPIT</span>
+            <h2 data-copy="cardFiveTitle">М'які кульки</h2>
+            <p data-copy="cardFiveText">Кульки вільно плавають у картці, відскакують від країв і створюють ефект живої ігрової ями.</p>
+          </article>
+
+          <article class="effect-card ballpit-card" data-tilt>
+            <canvas class="ballpit-canvas" data-ballpit="neon" aria-hidden="true"></canvas>
+            <span class="effect-number">06 / BOUNCE</span>
+            <h2 data-copy="cardSixTitle">Неоновий відскок</h2>
+            <p data-copy="cardSixText">Світлі м'ячики рухаються швидше, стикаються з невидимими стінками і лишають зелене сяйво.</p>
+          </article>
+
+          <article class="effect-card ballpit-card" data-tilt>
+            <canvas class="ballpit-canvas" data-ballpit="heavy" aria-hidden="true"></canvas>
+            <span class="effect-number">07 / GRAVITY</span>
+            <h2 data-copy="cardSevenTitle">Гравітація</h2>
+            <p data-copy="cardSevenText">Кульки ніби мають вагу: повільно падають, підстрибують і збираються ближче донизу.</p>
+          </article>
+
+          <article class="effect-card ballpit-card" data-tilt>
+            <canvas class="ballpit-canvas" data-ballpit="tiny" aria-hidden="true"></canvas>
+            <span class="effect-number">08 / MINI PIT</span>
+            <h2 data-copy="cardEightTitle">Міні-хаос</h2>
+            <p data-copy="cardEightText">Багато дрібних кульок рухаються у різні боки, ніби маленька фізична сцена всередині сайту.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="effects-section">
+      <div class="container">
+        <div class="section-heading">
+          <p class="section-label">09 / EXTRA FX</p>
+          <h2 class="section-title" data-copy="thirdSectionTitle">Ще один<br>рівень.</h2>
+        </div>
+        <div class="effects-grid">
+          <article class="effect-card" data-tilt>
+            <span class="effect-number">09 / GRID</span>
+            <h2 data-copy="cardNineTitle">Лазерна сітка</h2>
+            <p data-copy="cardNineText">Дві світлові лінії сканують поле по горизонталі та вертикалі, наче шукають прихований сигнал.</p>
+            <span class="laser-grid" aria-hidden="true"></span>
+          </article>
+
+          <article class="effect-card" data-tilt>
+            <span class="effect-number">10 / HOLO</span>
+            <h2 data-copy="cardTenTitle">Голограма</h2>
+            <p data-copy="cardTenText">Кільця зависають шарами і м'яко пульсують, ніби маленька 3D-проекція у терміналі.</p>
+            <span class="holo-stack" aria-hidden="true">
+              <span style="--i: 1"></span>
+              <span style="--i: 2"></span>
+              <span style="--i: 3"></span>
+              <span style="--i: 4"></span>
+            </span>
+          </article>
+
+          <article class="effect-card" data-tilt>
+            <span class="effect-number">11 / GLITCH</span>
+            <h2 data-copy="cardElevenTitle">Глітч</h2>
+            <p data-copy="cardElevenText">Слово розсипається на короткі цифрові зсуви, але швидко збирається назад.</p>
+            <span class="glitch-word" data-text="VLAD" aria-hidden="true">VLAD</span>
+          </article>
+
+          <article class="effect-card" data-tilt>
+            <span class="effect-number">12 / RADAR</span>
+            <h2 data-copy="cardTwelveTitle">Радар</h2>
+            <p data-copy="cardTwelveText">Промінь обертається по колу, підсвічуючи точки як маленьку карту руху.</p>
+            <span class="radar-scope" aria-hidden="true">
+              <span style="--i: 1; left: 58%; top: 26%;"></span>
+              <span style="--i: 2; left: 32%; top: 62%;"></span>
+              <span style="--i: 3; left: 72%; top: 70%;"></span>
+              <span style="--i: 4; left: 46%; top: 42%;"></span>
+            </span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="effects-section">
+      <div class="container">
+        <div class="section-heading">
+          <p class="section-label">13 / SYSTEM FX</p>
+          <h2 class="section-title" data-copy="fourthSectionTitle">Системні<br>ефекти.</h2>
+        </div>
+        <div class="effects-grid">
+          <article class="effect-card" data-tilt>
+            <span class="effect-number">13 / SCAN</span>
+            <h2 data-copy="cardThirteenTitle">Сканер</h2>
+            <p data-copy="cardThirteenText">Зелена лінія проходить по сітці, ніби сторінка перевіряє власну систему.</p>
+            <span class="scan-panel" aria-hidden="true"></span>
+          </article>
+
+          <article class="effect-card" data-tilt>
+            <span class="effect-number">14 / MATRIX</span>
+            <h2 data-copy="cardFourteenTitle">Дощ коду</h2>
+            <p data-copy="cardFourteenText">Символи падають шарами, створюючи відчуття живого зеленого терміналу.</p>
+            <span class="matrix-rain" aria-hidden="true">
+              <span style="--i: 1">101001</span>
+              <span style="--i: 2">dev404</span>
+              <span style="--i: 3">010111</span>
+              <span style="--i: 4">vlad()</span>
+              <span style="--i: 5">001101</span>
+              <span style="--i: 6">css++</span>
+              <span style="--i: 7">110010</span>
+            </span>
+          </article>
+
+          <article class="effect-card" data-tilt data-ripple-card>
+            <span class="effect-number">15 / RIPPLE</span>
+            <h2 data-copy="cardFifteenTitle">Клік-хвилі</h2>
+            <p data-copy="cardFifteenText">Коли натиснути на картку, від точки кліку розходиться нове світлове коло.</p>
+            <span class="ripple-field" aria-hidden="true">
+              <span style="--i: 1"></span>
+              <span style="--i: 2"></span>
+              <span style="--i: 3"></span>
+              <span style="--i: 4"></span>
+            </span>
+          </article>
+
+          <article class="effect-card" data-tilt>
+            <span class="effect-number">16 / STARS</span>
+            <h2 data-copy="cardSixteenTitle">Сузір'я</h2>
+            <p data-copy="cardSixteenText">Маленькі точки з'єднуються живою лінією, як схема ідей у нічному терміналі.</p>
+            <svg class="constellation" viewBox="0 0 340 170" aria-hidden="true">
+              <path d="M28 118 L82 66 L142 92 L204 38 L286 72 L316 28" />
+              <path d="M82 66 L106 136 L204 38 L232 128" />
+              <circle style="--i: 1" cx="28" cy="118" r="4" />
+              <circle style="--i: 2" cx="82" cy="66" r="5" />
+              <circle style="--i: 3" cx="106" cy="136" r="3.5" />
+              <circle style="--i: 4" cx="142" cy="92" r="4" />
+              <circle style="--i: 5" cx="204" cy="38" r="5" />
+              <circle style="--i: 6" cx="232" cy="128" r="3.5" />
+              <circle style="--i: 7" cx="286" cy="72" r="4" />
+              <circle style="--i: 8" cx="316" cy="28" r="4.5" />
+            </svg>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="galaxy-section" aria-label="Galaxy effect">
+      <canvas class="galaxy-canvas" data-galaxy-canvas aria-hidden="true"></canvas>
+      <div class="galaxy-ship" aria-hidden="true">
+        <svg viewBox="0 0 260 140" role="img">
+          <defs>
+            <linearGradient id="shipBodyGradient" x1="24" y1="70" x2="206" y2="70" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stop-color="#f7f7f0" />
+              <stop offset="0.48" stop-color="#9fb2bd" />
+              <stop offset="1" stop-color="#f4f4ef" />
+            </linearGradient>
+            <linearGradient id="shipGlassGradient" x1="90" y1="30" x2="158" y2="70" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stop-color="#cfffff" />
+              <stop offset="0.55" stop-color="#7fff64" />
+              <stop offset="1" stop-color="#123324" />
+            </linearGradient>
+            <radialGradient id="engineGlowGradient" cx="50%" cy="50%" r="50%">
+              <stop offset="0" stop-color="#f4fff0" />
+              <stop offset="0.32" stop-color="#7fff64" />
+              <stop offset="1" stop-color="rgba(127,255,100,0)" />
+            </radialGradient>
+          </defs>
+          <ellipse class="ship-glow" cx="138" cy="76" rx="92" ry="26" fill="rgba(127,255,100,0.12)" />
+          <path class="ship-thruster" d="M205 72 C238 55 252 64 214 78 C240 83 244 97 205 89 Z" fill="url(#engineGlowGradient)" />
+          <path d="M18 92 L229 70 L91 36 Z" fill="url(#shipBodyGradient)" />
+          <path d="M18 92 L229 70 L88 78 Z" fill="#bfc5c1" />
+          <path d="M91 36 L229 70 L105 60 Z" fill="#f4f4ef" />
+          <path d="M72 76 L111 55 L170 66 L108 82 Z" fill="#d9dedb" />
+          <path d="M92 55 L115 43 L142 51 L119 61 Z" fill="#aeb7b4" />
+          <path d="M107 43 L121 24 L136 43 Z" fill="#cfd5d2" />
+          <rect x="114" y="18" width="28" height="9" rx="2" fill="#dfe4e1" />
+          <rect x="119" y="11" width="19" height="8" rx="2" fill="#c7cecb" />
+          <rect x="103" y="25" width="12" height="15" rx="3" fill="#e9ece8" />
+          <rect x="139" y="25" width="12" height="15" rx="3" fill="#e9ece8" />
+          <path d="M42 90 L95 78 L151 73 L214 70" fill="none" stroke="#6d7472" stroke-width="1.2" opacity="0.68" />
+          <path d="M63 84 L103 64 L154 66" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.42" />
+          <path d="M86 48 L113 59 L101 75" fill="none" stroke="#68706d" stroke-width="1" opacity="0.7" />
+          <path d="M111 59 L151 66 L123 76" fill="none" stroke="#68706d" stroke-width="1" opacity="0.7" />
+          <path d="M128 52 L206 69" fill="none" stroke="#ffffff" stroke-width="0.9" opacity="0.35" />
+          <path d="M23 92 L77 76 L91 36" fill="none" stroke="#7fff64" stroke-width="1.8" opacity="0.72" />
+          <g fill="#111820" opacity="0.88">
+            <rect x="47" y="84" width="16" height="3" rx="1" />
+            <rect x="69" y="80" width="13" height="3" rx="1" />
+            <rect x="93" y="76" width="20" height="3" rx="1" />
+            <rect x="122" y="72" width="18" height="3" rx="1" />
+            <rect x="154" y="69" width="15" height="3" rx="1" />
+            <rect x="101" y="52" width="12" height="3" rx="1" />
+            <rect x="121" y="55" width="15" height="3" rx="1" />
+            <rect x="146" y="61" width="11" height="3" rx="1" />
+          </g>
+          <g fill="#7fff64">
+            <circle cx="207" cy="72" r="3" />
+            <circle cx="199" cy="76" r="2.5" />
+            <circle cx="190" cy="79" r="2" />
+          </g>
+          <path class="ship-window" d="M119 15 H137" stroke="#7fff64" stroke-width="2" stroke-linecap="round" opacity="0.82" />
+        </svg>
+      </div>
+      <div class="container">
+        <div class="galaxy-content">
+          <p class="section-label">17 / GALAXY</p>
+          <h2 class="galaxy-title" data-copy="galaxyTitle">Галактика</h2>
+          <p class="galaxy-copy" data-copy="galaxyText">Фінальний фон із зорями, спіраллю та повільним космічним рухом у самому низу сторінки.</p>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer class="site-footer">
@@ -1070,6 +1800,70 @@
       }
     };
 
+    Object.assign(translations.uk, {
+      secondSectionTitle: "Яма<br>кульок.",
+      cardFiveTitle: "М'які кульки",
+      cardFiveText: "Кульки вільно плавають у картці, відскакують від країв і створюють ефект живої ігрової ями.",
+      cardSixTitle: "Неоновий відскок",
+      cardSixText: "Світлі м'ячики рухаються швидше, стикаються з невидимими стінками і лишають зелене сяйво.",
+      cardSevenTitle: "Гравітація",
+      cardSevenText: "Кульки ніби мають вагу: повільно падають, підстрибують і збираються ближче донизу.",
+      cardEightTitle: "Міні-хаос",
+      cardEightText: "Багато дрібних кульок рухаються у різні боки, ніби маленька фізична сцена всередині сайту.",
+      thirdSectionTitle: "Ще один<br>рівень.",
+      cardNineTitle: "Лазерна сітка",
+      cardNineText: "Дві світлові лінії сканують поле по горизонталі та вертикалі, наче шукають прихований сигнал.",
+      cardTenTitle: "Голограма",
+      cardTenText: "Кільця зависають шарами і м'яко пульсують, ніби маленька 3D-проекція у терміналі.",
+      cardElevenTitle: "Глітч",
+      cardElevenText: "Слово розсипається на короткі цифрові зсуви, але швидко збирається назад.",
+      cardTwelveTitle: "Радар",
+      cardTwelveText: "Промінь обертається по колу, підсвічуючи точки як маленьку карту руху.",
+      fourthSectionTitle: "Системні<br>ефекти.",
+      cardThirteenTitle: "Сканер",
+      cardThirteenText: "Зелена лінія проходить по сітці, ніби сторінка перевіряє власну систему.",
+      cardFourteenTitle: "Дощ коду",
+      cardFourteenText: "Символи падають шарами, створюючи відчуття живого зеленого терміналу.",
+      cardFifteenTitle: "Клік-хвилі",
+      cardFifteenText: "Коли натиснути на картку, від точки кліку розходиться нове світлове коло.",
+      cardSixteenTitle: "Сузір'я",
+      cardSixteenText: "Маленькі точки з'єднуються живою лінією, як схема ідей у нічному терміналі.",
+      galaxyTitle: "Галактика",
+      galaxyText: "Фінальний фон із зорями, спіраллю та повільним космічним рухом у самому низу сторінки."
+    });
+
+    Object.assign(translations.en, {
+      secondSectionTitle: "Ballpit<br>motion.",
+      cardFiveTitle: "Soft balls",
+      cardFiveText: "Balls float inside the card, bounce from the edges, and make it feel like a living play pit.",
+      cardSixTitle: "Neon bounce",
+      cardSixText: "Bright balls move faster, hit invisible walls, and leave a green glow behind.",
+      cardSevenTitle: "Gravity",
+      cardSevenText: "The balls feel heavier: they fall slowly, bounce, and gather closer to the bottom.",
+      cardEightTitle: "Mini chaos",
+      cardEightText: "Lots of tiny balls move in different directions like a small physics scene inside the site.",
+      thirdSectionTitle: "One more<br>level.",
+      cardNineTitle: "Laser grid",
+      cardNineText: "Two light lines scan the field horizontally and vertically, as if searching for a hidden signal.",
+      cardTenTitle: "Hologram",
+      cardTenText: "Rings hover in layers and softly pulse like a tiny 3D projection inside the terminal.",
+      cardElevenTitle: "Glitch",
+      cardElevenText: "The word breaks into short digital shifts, then quickly snaps back together.",
+      cardTwelveTitle: "Radar",
+      cardTwelveText: "A beam rotates around the circle, lighting up points like a tiny movement map.",
+      fourthSectionTitle: "System<br>effects.",
+      cardThirteenTitle: "Scanner",
+      cardThirteenText: "A green line sweeps across the grid like the page is checking its own system.",
+      cardFourteenTitle: "Code rain",
+      cardFourteenText: "Symbols fall in layers, creating the feeling of a living green terminal.",
+      cardFifteenTitle: "Click ripples",
+      cardFifteenText: "When the card is pressed, a new glowing ring expands from the click point.",
+      cardSixteenTitle: "Constellation",
+      cardSixteenText: "Small points connect with a living line, like an idea map inside a night terminal.",
+      galaxyTitle: "Galaxy",
+      galaxyText: "A final background with stars, a spiral, and slow cosmic motion at the very bottom of the page."
+    });
+
     const copyTargets = document.querySelectorAll("[data-copy]");
     const languageButtons = document.querySelectorAll(".language-button");
     const canvas = document.querySelector(".field-canvas");
@@ -1080,6 +1874,448 @@
     let canvasWidth = 0;
     let canvasHeight = 0;
     let rhythm = 1;
+
+    function initBallpits() {
+      const ballpitCanvases = document.querySelectorAll("[data-ballpit]");
+
+      ballpitCanvases.forEach((pitCanvas) => {
+        const pitCtx = pitCanvas.getContext("2d");
+        const mode = pitCanvas.dataset.ballpit;
+        const state = {
+          width: 0,
+          height: 0,
+          pointerX: 0,
+          pointerY: 0,
+          pointerActive: false,
+          balls: []
+        };
+
+        function createBalls() {
+          const settings = {
+            soft: { count: 24, radius: [14, 34], speed: 0.75, gravity: 0 },
+            neon: { count: 32, radius: [9, 24], speed: 1.25, gravity: 0 },
+            heavy: { count: 22, radius: [16, 36], speed: 0.55, gravity: 0.035 },
+            tiny: { count: 58, radius: [5, 14], speed: 1.05, gravity: 0 }
+          }[mode] || { count: 28, radius: [10, 24], speed: 0.9, gravity: 0 };
+
+          state.balls = Array.from({ length: settings.count }, (_, index) => {
+            const radius = settings.radius[0] + Math.random() * (settings.radius[1] - settings.radius[0]);
+            const tone = index % 4;
+            return {
+              x: radius + Math.random() * Math.max(1, state.width - radius * 2),
+              y: radius + Math.random() * Math.max(1, state.height - radius * 2),
+              vx: (Math.random() - 0.5) * settings.speed * 2,
+              vy: (Math.random() - 0.5) * settings.speed * 2,
+              radius,
+              gravity: settings.gravity,
+              color: tone === 0 ? "#7fff64" : tone === 1 ? "#d9ffe0" : tone === 2 ? "#9edbff" : "#50d86b"
+            };
+          });
+        }
+
+        function resizePit() {
+          const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+          const rect = pitCanvas.getBoundingClientRect();
+          state.width = rect.width;
+          state.height = rect.height;
+          pitCanvas.width = Math.round(state.width * pixelRatio);
+          pitCanvas.height = Math.round(state.height * pixelRatio);
+          pitCtx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+          createBalls();
+        }
+
+        function drawPit() {
+          pitCtx.clearRect(0, 0, state.width, state.height);
+          pitCtx.fillStyle = "rgba(5, 5, 7, 0.18)";
+          pitCtx.fillRect(0, 0, state.width, state.height);
+
+          state.balls.forEach((ball) => {
+            if (!reduceMotion) {
+              ball.vy += ball.gravity;
+
+              if (state.pointerActive) {
+                const dx = ball.x - state.pointerX;
+                const dy = ball.y - state.pointerY;
+                const distance = Math.hypot(dx, dy);
+                if (distance > 0 && distance < 120) {
+                  const push = (1 - distance / 120) * 0.48;
+                  ball.vx += (dx / distance) * push;
+                  ball.vy += (dy / distance) * push;
+                }
+              }
+
+              ball.x += ball.vx * rhythm;
+              ball.y += ball.vy * rhythm;
+              ball.vx *= 0.996;
+              ball.vy *= 0.996;
+
+              if (ball.x < ball.radius) {
+                ball.x = ball.radius;
+                ball.vx = Math.abs(ball.vx) * 0.92;
+              }
+              if (ball.x > state.width - ball.radius) {
+                ball.x = state.width - ball.radius;
+                ball.vx = -Math.abs(ball.vx) * 0.92;
+              }
+              if (ball.y < ball.radius) {
+                ball.y = ball.radius;
+                ball.vy = Math.abs(ball.vy) * 0.92;
+              }
+              if (ball.y > state.height - ball.radius) {
+                ball.y = state.height - ball.radius;
+                ball.vy = -Math.abs(ball.vy) * 0.78;
+              }
+            }
+
+            const gradient = pitCtx.createRadialGradient(
+              ball.x - ball.radius * 0.35,
+              ball.y - ball.radius * 0.35,
+              ball.radius * 0.12,
+              ball.x,
+              ball.y,
+              ball.radius
+            );
+            gradient.addColorStop(0, "#ffffff");
+            gradient.addColorStop(0.18, ball.color);
+            gradient.addColorStop(1, "rgba(6, 21, 10, 0.82)");
+
+            pitCtx.beginPath();
+            pitCtx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+            pitCtx.fillStyle = gradient;
+            pitCtx.shadowColor = "rgba(127, 255, 100, 0.42)";
+            pitCtx.shadowBlur = 18;
+            pitCtx.fill();
+            pitCtx.shadowBlur = 0;
+          });
+
+          if (!reduceMotion) requestAnimationFrame(drawPit);
+        }
+
+        pitCanvas.parentElement.addEventListener("pointermove", (event) => {
+          const rect = pitCanvas.getBoundingClientRect();
+          state.pointerX = event.clientX - rect.left;
+          state.pointerY = event.clientY - rect.top;
+          state.pointerActive = true;
+        });
+
+        pitCanvas.parentElement.addEventListener("pointerleave", () => {
+          state.pointerActive = false;
+        });
+
+        resizePit();
+        drawPit();
+        window.addEventListener("resize", resizePit);
+      });
+    }
+
+    function initGalaxy() {
+      const galaxyCanvas = document.querySelector("[data-galaxy-canvas]");
+      if (!galaxyCanvas) return;
+      const galaxySection = galaxyCanvas.closest(".galaxy-section");
+      let galaxyTextTimer;
+      let lastShipX = 72;
+
+      const gl = galaxyCanvas.getContext("webgl", { alpha: true, premultipliedAlpha: false });
+      if (!gl) return;
+
+      const vertexSource = `
+        attribute vec2 position;
+        varying vec2 vUv;
+        void main() {
+          vUv = position * 0.5 + 0.5;
+          gl_Position = vec4(position, 0.0, 1.0);
+        }
+      `;
+
+      const fragmentSource = `
+        precision highp float;
+
+        uniform float uTime;
+        uniform vec3 uResolution;
+        uniform vec2 uFocal;
+        uniform vec2 uRotation;
+        uniform float uStarSpeed;
+        uniform float uDensity;
+        uniform float uHueShift;
+        uniform float uSpeed;
+        uniform vec2 uMouse;
+        uniform float uGlowIntensity;
+        uniform float uSaturation;
+        uniform bool uMouseRepulsion;
+        uniform float uTwinkleIntensity;
+        uniform float uRotationSpeed;
+        uniform float uRepulsionStrength;
+        uniform float uMouseActiveFactor;
+        uniform float uAutoCenterRepulsion;
+        uniform bool uTransparent;
+
+        varying vec2 vUv;
+
+        #define NUM_LAYER 4.0
+        #define STAR_COLOR_CUTOFF 0.2
+        #define MAT45 mat2(0.7071, -0.7071, 0.7071, 0.7071)
+        #define PERIOD 3.0
+
+        float Hash21(vec2 p) {
+          p = fract(p * vec2(123.34, 456.21));
+          p += dot(p, p + 45.32);
+          return fract(p.x * p.y);
+        }
+
+        float tri(float x) {
+          return abs(fract(x) * 2.0 - 1.0);
+        }
+
+        float tris(float x) {
+          float t = fract(x);
+          return 1.0 - smoothstep(0.0, 1.0, abs(2.0 * t - 1.0));
+        }
+
+        float trisn(float x) {
+          float t = fract(x);
+          return 2.0 * (1.0 - smoothstep(0.0, 1.0, abs(2.0 * t - 1.0))) - 1.0;
+        }
+
+        vec3 hsv2rgb(vec3 c) {
+          vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+          vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+          return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+        }
+
+        float Star(vec2 uv, float flare) {
+          float d = length(uv);
+          float m = (0.05 * uGlowIntensity) / d;
+          float rays = smoothstep(0.0, 1.0, 1.0 - abs(uv.x * uv.y * 1000.0));
+          m += rays * flare * uGlowIntensity;
+          uv *= MAT45;
+          rays = smoothstep(0.0, 1.0, 1.0 - abs(uv.x * uv.y * 1000.0));
+          m += rays * 0.3 * flare * uGlowIntensity;
+          m *= smoothstep(1.0, 0.2, d);
+          return m;
+        }
+
+        vec3 StarLayer(vec2 uv) {
+          vec3 col = vec3(0.0);
+          vec2 gv = fract(uv) - 0.5;
+          vec2 id = floor(uv);
+
+          for (int y = -1; y <= 1; y++) {
+            for (int x = -1; x <= 1; x++) {
+              vec2 offset = vec2(float(x), float(y));
+              vec2 si = id + vec2(float(x), float(y));
+              float seed = Hash21(si);
+              float size = fract(seed * 345.32);
+              float glossLocal = tri(uStarSpeed / (PERIOD * seed + 1.0));
+              float flareSize = smoothstep(0.9, 1.0, size) * glossLocal;
+
+              float red = smoothstep(STAR_COLOR_CUTOFF, 1.0, Hash21(si + 1.0)) + STAR_COLOR_CUTOFF;
+              float blu = smoothstep(STAR_COLOR_CUTOFF, 1.0, Hash21(si + 3.0)) + STAR_COLOR_CUTOFF;
+              float grn = min(red, blu) * seed;
+              vec3 base = vec3(red, grn, blu);
+
+              float hue = atan(base.g - base.r, base.b - base.r) / (2.0 * 3.14159) + 0.5;
+              hue = fract(hue + uHueShift / 360.0);
+              float sat = length(base - vec3(dot(base, vec3(0.299, 0.587, 0.114)))) * uSaturation;
+              float val = max(max(base.r, base.g), base.b);
+              base = hsv2rgb(vec3(hue, sat, val));
+
+              vec2 pad = vec2(tris(seed * 34.0 + uTime * uSpeed / 10.0), tris(seed * 38.0 + uTime * uSpeed / 30.0)) - 0.5;
+              float star = Star(gv - offset - pad, flareSize);
+              float twinkle = trisn(uTime * uSpeed + seed * 6.2831) * 0.5 + 1.0;
+              twinkle = mix(1.0, twinkle, uTwinkleIntensity);
+              star *= twinkle;
+              col += star * size * base;
+            }
+          }
+
+          return col;
+        }
+
+        void main() {
+          vec2 focalPx = uFocal * uResolution.xy;
+          vec2 uv = (vUv * uResolution.xy - focalPx) / uResolution.y;
+          vec2 mouseNorm = uMouse - vec2(0.5);
+
+          if (uAutoCenterRepulsion > 0.0) {
+            vec2 centerUV = vec2(0.0, 0.0);
+            float centerDist = length(uv - centerUV);
+            vec2 repulsion = normalize(uv - centerUV) * (uAutoCenterRepulsion / (centerDist + 0.1));
+            uv += repulsion * 0.05;
+          } else if (uMouseRepulsion) {
+            vec2 mousePosUV = (uMouse * uResolution.xy - focalPx) / uResolution.y;
+            float mouseDist = length(uv - mousePosUV);
+            vec2 repulsion = normalize(uv - mousePosUV) * (uRepulsionStrength / (mouseDist + 0.1));
+            uv += repulsion * 0.05 * uMouseActiveFactor;
+          } else {
+            vec2 mouseOffset = mouseNorm * 0.1 * uMouseActiveFactor;
+            uv += mouseOffset;
+          }
+
+          float autoRotAngle = uTime * uRotationSpeed;
+          mat2 autoRot = mat2(cos(autoRotAngle), -sin(autoRotAngle), sin(autoRotAngle), cos(autoRotAngle));
+          uv = autoRot * uv;
+          uv = mat2(uRotation.x, -uRotation.y, uRotation.y, uRotation.x) * uv;
+
+          vec3 col = vec3(0.0);
+          for (float i = 0.0; i < 1.0; i += 1.0 / NUM_LAYER) {
+            float depth = fract(i + uStarSpeed * uSpeed);
+            float scale = mix(20.0 * uDensity, 0.5 * uDensity, depth);
+            float fade = depth * smoothstep(1.0, 0.9, depth);
+            col += StarLayer(uv * scale + i * 453.32) * fade;
+          }
+
+          if (uTransparent) {
+            float alpha = length(col);
+            alpha = smoothstep(0.0, 0.3, alpha);
+            alpha = min(alpha, 1.0);
+            gl_FragColor = vec4(col, alpha);
+          } else {
+            gl_FragColor = vec4(col, 1.0);
+          }
+        }
+      `;
+
+      function compileGalaxyShader(type, source) {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+          gl.deleteShader(shader);
+          return null;
+        }
+        return shader;
+      }
+
+      const vertexShader = compileGalaxyShader(gl.VERTEX_SHADER, vertexSource);
+      const fragmentShader = compileGalaxyShader(gl.FRAGMENT_SHADER, fragmentSource);
+      if (!vertexShader || !fragmentShader) return;
+
+      const program = gl.createProgram();
+      gl.attachShader(program, vertexShader);
+      gl.attachShader(program, fragmentShader);
+      gl.linkProgram(program);
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return;
+      gl.useProgram(program);
+
+      const positionBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+
+      const positionLocation = gl.getAttribLocation(program, "position");
+      gl.enableVertexAttribArray(positionLocation);
+      gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+      const uniforms = {
+        time: gl.getUniformLocation(program, "uTime"),
+        resolution: gl.getUniformLocation(program, "uResolution"),
+        focal: gl.getUniformLocation(program, "uFocal"),
+        rotation: gl.getUniformLocation(program, "uRotation"),
+        starSpeed: gl.getUniformLocation(program, "uStarSpeed"),
+        density: gl.getUniformLocation(program, "uDensity"),
+        hueShift: gl.getUniformLocation(program, "uHueShift"),
+        speed: gl.getUniformLocation(program, "uSpeed"),
+        mouse: gl.getUniformLocation(program, "uMouse"),
+        glowIntensity: gl.getUniformLocation(program, "uGlowIntensity"),
+        saturation: gl.getUniformLocation(program, "uSaturation"),
+        mouseRepulsion: gl.getUniformLocation(program, "uMouseRepulsion"),
+        twinkleIntensity: gl.getUniformLocation(program, "uTwinkleIntensity"),
+        rotationSpeed: gl.getUniformLocation(program, "uRotationSpeed"),
+        repulsionStrength: gl.getUniformLocation(program, "uRepulsionStrength"),
+        mouseActiveFactor: gl.getUniformLocation(program, "uMouseActiveFactor"),
+        autoCenterRepulsion: gl.getUniformLocation(program, "uAutoCenterRepulsion"),
+        transparent: gl.getUniformLocation(program, "uTransparent")
+      };
+
+      const galaxy = {
+        mouseX: 0.5,
+        mouseY: 0.5,
+        targetX: 0.5,
+        targetY: 0.5,
+        mouseActive: 0,
+        targetMouseActive: 0
+      };
+
+      function resizeGalaxy() {
+        const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+        const rect = galaxyCanvas.getBoundingClientRect();
+        galaxyCanvas.width = Math.max(1, Math.round(rect.width * pixelRatio));
+        galaxyCanvas.height = Math.max(1, Math.round(rect.height * pixelRatio));
+        gl.viewport(0, 0, galaxyCanvas.width, galaxyCanvas.height);
+      }
+
+      function drawGalaxy(time = 0) {
+        galaxy.mouseX += (galaxy.targetX - galaxy.mouseX) * 0.045;
+        galaxy.mouseY += (galaxy.targetY - galaxy.mouseY) * 0.045;
+        galaxy.mouseActive += (galaxy.targetMouseActive - galaxy.mouseActive) * 0.045;
+
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+        gl.clearColor(0, 0, 0, 0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.useProgram(program);
+        gl.uniform1f(uniforms.time, time * 0.001);
+        gl.uniform3f(uniforms.resolution, galaxyCanvas.width, galaxyCanvas.height, galaxyCanvas.width / Math.max(galaxyCanvas.height, 1));
+        gl.uniform2f(uniforms.focal, 0.5, 0.5);
+        gl.uniform2f(uniforms.rotation, 1.0, 0.0);
+        gl.uniform1f(uniforms.starSpeed, (time * 0.001 * 0.5 * rhythm) / 10.0);
+        gl.uniform1f(uniforms.density, 1.0);
+        gl.uniform1f(uniforms.hueShift, 140.0);
+        gl.uniform1f(uniforms.speed, 1.0 * rhythm);
+        gl.uniform2f(uniforms.mouse, galaxy.mouseX, galaxy.mouseY);
+        gl.uniform1f(uniforms.glowIntensity, 0.3);
+        gl.uniform1f(uniforms.saturation, 0.0);
+        gl.uniform1i(uniforms.mouseRepulsion, 1);
+        gl.uniform1f(uniforms.twinkleIntensity, 0.3);
+        gl.uniform1f(uniforms.rotationSpeed, 0.1);
+        gl.uniform1f(uniforms.repulsionStrength, 2.0);
+        gl.uniform1f(uniforms.mouseActiveFactor, galaxy.mouseActive);
+        gl.uniform1f(uniforms.autoCenterRepulsion, 0.0);
+        gl.uniform1i(uniforms.transparent, 1);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+        if (!reduceMotion) requestAnimationFrame(drawGalaxy);
+      }
+
+      galaxyCanvas.parentElement.addEventListener("pointermove", (event) => {
+        const rect = galaxyCanvas.getBoundingClientRect();
+        const localX = (event.clientX - rect.left) / Math.max(rect.width, 1);
+        const localY = (event.clientY - rect.top) / Math.max(rect.height, 1);
+        galaxy.targetX = localX;
+        galaxy.targetY = 1 - localY;
+        galaxy.targetMouseActive = 1;
+
+        if (galaxySection) {
+          const shipX = Math.min(92, Math.max(8, localX * 100));
+          const shipY = Math.min(78, Math.max(18, localY * 100));
+          const tilt = Math.min(16, Math.max(-16, (shipX - lastShipX) * 0.55 - 7));
+          lastShipX = shipX;
+          galaxySection.style.setProperty("--ship-x", `${shipX}%`);
+          galaxySection.style.setProperty("--ship-y", `${shipY}%`);
+          galaxySection.style.setProperty("--ship-tilt", `${tilt}deg`);
+        }
+      });
+
+      galaxyCanvas.parentElement.addEventListener("pointerleave", () => {
+        galaxy.targetX = 0.5;
+        galaxy.targetY = 0.5;
+        galaxy.targetMouseActive = 0;
+      });
+
+      if (galaxySection) {
+        galaxySection.addEventListener("pointerenter", () => {
+          galaxySection.classList.add("galaxy-text-visible");
+          galaxySection.classList.remove("galaxy-ship-visible");
+          window.clearTimeout(galaxyTextTimer);
+          galaxyTextTimer = window.setTimeout(() => {
+            galaxySection.classList.remove("galaxy-text-visible");
+            galaxySection.classList.add("galaxy-ship-visible");
+          }, 5000);
+        });
+      }
+
+      resizeGalaxy();
+      drawGalaxy();
+      window.addEventListener("resize", resizeGalaxy);
+    }
 
     function setLanguage(language) {
       const copy = translations[language];
@@ -1097,12 +2333,39 @@
         button.setAttribute("aria-pressed", String(active));
       });
 
+      refreshFallingTitles();
       localStorage.setItem("vlad-language", language);
     }
 
     languageButtons.forEach((button) => {
       button.addEventListener("click", () => setLanguage(button.dataset.language));
     });
+
+    function refreshFallingTitles() {
+      document.querySelectorAll("[data-falling-title]").forEach((title) => {
+        const source = translations[document.documentElement.lang]?.[title.dataset.copy] || title.innerHTML;
+        const lines = source.split("<br>");
+        let index = 0;
+
+        title.innerHTML = lines.map((line) => {
+          const pieces = [...line].map((character) => {
+            if (character === " ") {
+              index += 1;
+              return `<span class="falling-piece falling-space" style="--fall-index: ${index}; --fall-rotate: 0" aria-hidden="true"></span>`;
+            }
+
+            index += 1;
+            const rotate = ((index % 7) - 3) * 7;
+            return `<span class="falling-piece" style="--fall-index: ${index}; --fall-rotate: ${rotate}">${character}</span>`;
+          }).join("");
+
+          return `<span class="falling-line">${pieces}</span>`;
+        }).join("");
+
+        title.classList.remove("is-falling");
+        window.setTimeout(() => title.classList.add("is-falling"), 80);
+      });
+    }
 
     function resizeCanvas() {
       const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
@@ -1158,7 +2421,7 @@
       document.body.style.setProperty("--glow-x", `${(event.clientX / window.innerWidth) * 100}%`);
       document.body.style.setProperty("--glow-y", `${(event.clientY / window.innerHeight) * 100}%`);
 
-      if (!reduceMotion && event.pointerType === "mouse") {
+      if (!reduceMotion && event.pointerType === "mouse" && !event.target.closest(".galaxy-section")) {
         const dot = document.createElement("span");
         dot.className = "trail-dot";
         dot.style.left = `${event.clientX - 4}px`;
@@ -1484,6 +2747,18 @@
       }
     });
 
+    document.querySelectorAll("[data-ripple-card]").forEach((card) => {
+      card.addEventListener("click", (event) => {
+        const rect = card.getBoundingClientRect();
+        const ripple = document.createElement("span");
+        ripple.className = "ripple-pop";
+        ripple.style.left = `${event.clientX - rect.left}px`;
+        ripple.style.top = `${event.clientY - rect.top}px`;
+        card.appendChild(ripple);
+        window.setTimeout(() => ripple.remove(), 700);
+      });
+    });
+
     document.querySelector("[data-randomize]").addEventListener("click", () => {
       rhythm = rhythm === 1 ? 1.75 : rhythm === 1.75 ? 0.62 : 1;
       document.querySelectorAll(".bars span").forEach((bar, index) => {
@@ -1546,6 +2821,8 @@
     document.getElementById("year").textContent = new Date().getFullYear();
     resizeCanvas();
     render();
+    initBallpits();
+    initGalaxy();
     initMagnetLinks();
     setLanguage(localStorage.getItem("vlad-language") === "en" ? "en" : "uk");
   </script>

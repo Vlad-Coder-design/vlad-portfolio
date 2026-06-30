@@ -41,6 +41,11 @@
       font-family: "Inter", sans-serif;
       line-height: 1.6;
       overflow-x: hidden;
+      cursor: auto;
+    }
+
+    body * {
+      cursor: auto;
     }
 
     body::before {
@@ -67,12 +72,6 @@
     ::selection {
       color: var(--bg);
       background: var(--accent);
-    }
-
-    html,
-    body,
-    body * {
-      cursor: none !important;
     }
 
     .container {
@@ -269,6 +268,11 @@
       position: relative;
       padding: 0;
       overflow: visible;
+      cursor: none;
+    }
+
+    .effects-orbit-link * {
+      cursor: none;
     }
 
     .effects-orbit-link::before,
@@ -848,12 +852,12 @@
           <h2 class="section-title" data-copy="sectionTitle">Місця та<br>спогади.</h2>
         </div>
         <div class="map-board" aria-label="Мапа подорожей">
-          <span class="map-status" data-copy="mapStatus">● 3 МІСЦЯ ДОДАНО</span>
+          <span class="map-status" data-copy="mapStatus">● 4 МІСЦЯ ДОДАНО</span>
           <div id="aceternity-globe" class="aceternity-globe" aria-label="Інтерактивний 3D-глобус із місцями подорожей">
             <span class="globe-loading">LOADING 3D GLOBE...</span>
           </div>
           <span class="globe-hint" data-copy="globeHint">ПЕРЕТЯГНИ, ЩОБ ПОВЕРНУТИ ГЛОБУС</span>
-          <p class="map-note" data-copy="mapNote">На глобусі вже позначено Португалію, Австрію та Балі. Нові місця можна буде додати пізніше.</p>
+          <p class="map-note" data-copy="mapNote">На глобусі вже позначено Португалію, Австрію, Балі та Україну. Нові місця можна буде додати пізніше.</p>
         </div>
         <div class="map-details">
           <article class="map-detail">
@@ -870,6 +874,11 @@
             <span>03 / ASIA</span>
             <h2 data-copy="cardThreeTitle">Балі</h2>
             <p data-copy="cardThreeText">Далека точка маршруту та особлива подорож до Індонезії.</p>
+          </article>
+          <article class="map-detail">
+            <span>04 / EUROPE</span>
+            <h2 data-copy="cardFourTitle">Україна</h2>
+            <p data-copy="cardFourText">Головна точка на мапі та місце, з якого починаються всі маршрути.</p>
           </article>
         </div>
       </div>
@@ -900,15 +909,17 @@
         heroText: "Тут я зберігатиму місця, де побував завдяки моєму брату. Кожна точка на мапі — це окрема подорож і спільний спогад.",
         tag: "03 / МАПА ПОДОРОЖЕЙ",
         sectionTitle: "Місця та<br>спогади.",
-        mapStatus: "● 3 МІСЦЯ ДОДАНО",
+        mapStatus: "● 4 МІСЦЯ ДОДАНО",
         globeHint: "ПЕРЕТЯГНИ, ЩОБ ПОВЕРНУТИ ГЛОБУС",
-        mapNote: "На глобусі вже позначено Португалію, Австрію та Балі. Нові місця можна буде додати пізніше.",
+        mapNote: "На глобусі вже позначено Португалію, Австрію, Балі та Україну. Нові місця можна буде додати пізніше.",
         cardOneTitle: "Португалія",
         cardOneText: "Перша позначена точка на карті подорожей із братом.",
         cardTwoTitle: "Австрія",
         cardTwoText: "Ще одна подорож і спільний спогад, збережений на глобусі.",
         cardThreeTitle: "Балі",
         cardThreeText: "Далека точка маршруту та особлива подорож до Індонезії.",
+        cardFourTitle: "Україна",
+        cardFourText: "Головна точка на мапі та місце, з якого починаються всі маршрути.",
         email: "твоя пошта"
       },
       en: {
@@ -919,15 +930,17 @@
         heroText: "Here I will keep the places I visited thanks to my brother. Every point on the map is a separate journey and a shared memory.",
         tag: "03 / TRAVEL MAP",
         sectionTitle: "Places and<br>memories.",
-        mapStatus: "● 3 PLACES ADDED",
+        mapStatus: "● 4 PLACES ADDED",
         globeHint: "DRAG TO ROTATE THE GLOBE",
-        mapNote: "Portugal, Austria, and Bali are already marked on the globe. More places can be added later.",
+        mapNote: "Portugal, Austria, Bali, and Ukraine are already marked on the globe. More places can be added later.",
         cardOneTitle: "Portugal",
         cardOneText: "The first marked point on the travel map with my brother.",
         cardTwoTitle: "Austria",
         cardTwoText: "Another journey and shared memory saved on the globe.",
         cardThreeTitle: "Bali",
         cardThreeText: "A distant route point and a special journey to Indonesia.",
+        cardFourTitle: "Ukraine",
+        cardFourText: "The home point on the map and the place where every route begins.",
         email: "your email"
       }
     };
@@ -938,7 +951,8 @@
     const globePlaces = [
       { uk: "Португалія", en: "Portugal", lat: 38.7223, lng: -9.1393 },
       { uk: "Австрія", en: "Austria", lat: 48.2082, lng: 16.3738 },
-      { uk: "Балі", en: "Bali", lat: -8.65, lng: 115.2167 }
+      { uk: "Балі", en: "Bali", lat: -8.65, lng: 115.2167 },
+      { uk: "Україна", en: "Ukraine", lat: 50.4501, lng: 30.5234 }
     ];
     const globeContinents = [
       [[72,-168],[70,-156],[61,-148],[58,-139],[55,-132],[49,-127],[42,-124],[34,-120],[29,-114],[23,-110],[19,-105],[16,-96],[20,-90],[26,-97],[30,-92],[30,-85],[25,-81],[29,-80],[35,-76],[40,-74],[44,-67],[49,-66],[54,-60],[59,-63],[63,-70],[68,-78],[72,-95],[76,-115],[74,-140],[72,-168]],
@@ -1202,6 +1216,7 @@
 
       drawGlobeArc(globePlaces[0], globePlaces[1], radius, centerX, centerY);
       drawGlobeArc(globePlaces[1], globePlaces[2], radius, centerX, centerY);
+      drawGlobeArc(globePlaces[2], globePlaces[3], radius, centerX, centerY);
 
       globePlaces.forEach((place, index) => {
         const point = projectGlobePoint(place.lat, place.lng, radius, centerX, centerY);
@@ -1376,7 +1391,8 @@
     const markerData = [
       { lat: 38.7223, lng: -9.1393, uk: "Португалія", en: "Portugal" },
       { lat: 48.2082, lng: 16.3738, uk: "Австрія", en: "Austria" },
-      { lat: -8.65, lng: 115.2167, uk: "Балі", en: "Bali" }
+      { lat: -8.65, lng: 115.2167, uk: "Балі", en: "Bali" },
+      { lat: 50.4501, lng: 30.5234, uk: "Україна", en: "Ukraine" }
     ];
 
     function latLngToVector3(lat, lng, radius) {
@@ -1567,6 +1583,11 @@
         h(RouteArc, {
           start: markerData[1],
           end: markerData[2],
+          radius: radius * 1.018
+        }),
+        h(RouteArc, {
+          start: markerData[2],
+          end: markerData[3],
           radius: radius * 1.018
         }),
         markerData.map((marker) =>

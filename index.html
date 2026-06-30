@@ -71,12 +71,6 @@
       background: var(--accent);
     }
 
-    html,
-    body,
-    body * {
-      cursor: none !important;
-    }
-
     .mono {
       font-family: "JetBrains Mono", monospace;
     }
@@ -216,6 +210,11 @@
       position: relative;
       padding: 0;
       overflow: visible;
+      cursor: none;
+    }
+
+    .effects-orbit-link * {
+      cursor: none;
     }
 
     .effects-orbit-link::before,
