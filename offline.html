@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0d0d10">
+  <title>Vlad.dev — offline runner</title>
+  <style>
+    :root {
+      --bg: #0d0d10;
+      --text: #f4f4ef;
+      --muted: #9b9ba5;
+      --accent: #7fff64;
+      --line: rgba(255, 255, 255, 0.12);
+      --grid: rgba(127, 255, 100, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+    }
+
+    body {
+      min-width: 320px;
+      color: var(--text);
+      background-color: var(--bg);
+      background-image:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+      background-size: 48px 48px;
+      font-family: Inter, Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 78% 16%, rgba(127, 255, 100, 0.14), transparent 28%),
+        radial-gradient(circle at 12% 84%, rgba(127, 255, 100, 0.09), transparent 24%);
+    }
+
+    .offline-shell {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      min-height: 100vh;
+      padding: 22px;
+      grid-template-rows: auto 1fr auto;
+      gap: 18px;
+    }
+
+    .topbar,
+    .game-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      font-family: "JetBrains Mono", Consolas, monospace;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0;
+      font-size: 0.72rem;
+    }
+
+    .brand {
+      color: var(--text);
+      font-weight: 800;
+      text-transform: none;
+      font-size: 1rem;
+    }
+
+    .brand span,
+    .status {
+      color: var(--accent);
+    }
+
+    .game-stage {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-height: 0;
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(180deg, rgba(127, 255, 100, 0.06), transparent 45%),
+        rgba(10, 10, 13, 0.7);
+      box-shadow: inset 0 0 0 1px rgba(127, 255, 100, 0.03);
+      overflow: hidden;
+    }
+
+    .game-stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        repeating-linear-gradient(90deg, transparent 0 92px, rgba(127, 255, 100, 0.035) 93px 94px),
+        repeating-linear-gradient(0deg, transparent 0 92px, rgba(127, 255, 100, 0.035) 93px 94px);
+      opacity: 0.72;
+    }
+
+    canvas {
+      position: relative;
+      z-index: 1;
+      width: min(100%, 1120px);
+      height: min(58vh, 480px);
+      display: block;
+      image-rendering: auto;
+    }
+
+    .hud {
+      position: absolute;
+      z-index: 2;
+      inset: 22px 22px auto 22px;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      pointer-events: none;
+      font-family: "JetBrains Mono", Consolas, monospace;
+      color: var(--muted);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+    }
+
+    .hud strong {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .intro {
+      position: absolute;
+      z-index: 3;
+      inset: auto 22px 24px 22px;
+      max-width: 640px;
+      color: var(--muted);
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      line-height: 1.55;
+      pointer-events: none;
+    }
+
+    .intro b {
+      color: var(--text);
+    }
+
+    .game-button {
+      position: absolute;
+      right: 22px;
+      bottom: 24px;
+      z-index: 4;
+      min-height: 44px;
+      padding: 0 18px;
+      border: 1px solid rgba(127, 255, 100, 0.44);
+      color: var(--bg);
+      background: var(--accent);
+      font-family: "JetBrains Mono", Consolas, monospace;
+      font-weight: 800;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .game-button:hover {
+      filter: brightness(1.08);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 720px) {
+      .offline-shell {
+        padding: 14px;
+      }
+
+      .topbar,
+      .game-footer,
+      .hud {
+        font-size: 0.62rem;
+      }
+
+      .game-stage {
+        min-height: 72vh;
+      }
+
+      canvas {
+        height: 62vh;
+      }
+
+      .intro {
+        inset-inline: 14px;
+        bottom: 76px;
+      }
+
+      .game-button {
+        right: 14px;
+        bottom: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="offline-shell">
+    <header class="topbar">
+      <div class="brand">vlad<span>.dev</span></div>
+      <div class="status">offline mode</div>
+    </header>
+
+    <section class="game-stage" aria-label="Offline mini game">
+      <div class="hud">
+        <div>Score: <strong id="score">0</strong></div>
+        <div>Best: <strong id="best">0</strong></div>
+      </div>
+      <canvas id="game" width="1120" height="480"></canvas>
+      <p class="intro" id="intro">
+        <b>Інтернет зник, але сайт не здається.</b><br>
+        Натисни Space, ↑ або тапни по екрану, щоб перестрибувати баги.
+      </p>
+      <button class="game-button" id="restart" type="button">Старт</button>
+    </section>
+
+    <footer class="game-footer">
+      <span>2026 Vlad.dev</span>
+      <span>// offline runner</span>
+    </footer>
+  </main>
+
+  <script>
+    const canvas = document.getElementById("game");
+    const ctx = canvas.getContext("2d");
+    const scoreNode = document.getElementById("score");
+    const bestNode = document.getElementById("best");
+    const restartButton = document.getElementById("restart");
+    const intro = document.getElementById("intro");
+
+    const state = {
+      running: false,
+      ended: false,
+      time: 0,
+      score: 0,
+      speed: 6,
+      ground: 380,
+      best: Number(localStorage.getItem("vlad-offline-best") || 0),
+      obstacles: [],
+      particles: []
+    };
+
+    const player = {
+      x: 120,
+      y: state.ground - 58,
+      width: 54,
+      height: 58,
+      vy: 0,
+      onGround: true
+    };
+
+    bestNode.textContent = state.best;
+
+    function resetGame() {
+      state.running = true;
+      state.ended = false;
+      state.time = 0;
+      state.score = 0;
+      state.speed = 6;
+      state.obstacles = [];
+      state.particles = [];
+      player.y = state.ground - player.height;
+      player.vy = 0;
+      player.onGround = true;
+      intro.classList.add("hidden");
+      restartButton.textContent = "Заново";
+      restartButton.classList.add("hidden");
+    }
+
+    function jump() {
+      if (!state.running) {
+        resetGame();
+        return;
+      }
+
+      if (player.onGround) {
+        player.vy = -16.6;
+        player.onGround = false;
+        for (let i = 0; i < 8; i += 1) {
+          state.particles.push({
+            x: player.x + 10,
+            y: state.ground - 10,
+            vx: -Math.random() * 3 - 1,
+            vy: -Math.random() * 3,
+            life: 34
+          });
+        }
+      }
+    }
+
+    function endGame() {
+      state.running = false;
+      state.ended = true;
+      intro.innerHTML = "<b>Ой, баг наздогнав.</b><br>Натисни кнопку, Space або тапни, щоб спробувати ще раз.";
+      intro.classList.remove("hidden");
+      restartButton.classList.remove("hidden");
+
+      if (state.score > state.best) {
+        state.best = state.score;
+        localStorage.setItem("vlad-offline-best", state.best);
+        bestNode.textContent = state.best;
+      }
+    }
+
+    function spawnObstacle() {
+      const tall = Math.random() > 0.62;
+      const width = tall ? 34 : 48;
+      const height = tall ? 82 : 48;
+      state.obstacles.push({
+        x: canvas.width + 40,
+        y: state.ground - height,
+        width,
+        height,
+        hue: tall ? "#7fff64" : "#f4f4ef"
+      });
+    }
+
+    function drawPlayer() {
+      const x = player.x;
+      const y = player.y;
+
+      ctx.save();
+      ctx.translate(x + player.width / 2, y + player.height / 2);
+      ctx.rotate(player.onGround ? Math.sin(state.time / 8) * 0.03 : -0.12);
+      ctx.translate(-player.width / 2, -player.height / 2);
+
+      ctx.fillStyle = "#7fff64";
+      ctx.fillRect(8, 12, 34, 34);
+      ctx.fillStyle = "#0d0d10";
+      ctx.fillRect(18, 21, 6, 6);
+      ctx.fillRect(31, 21, 6, 6);
+      ctx.fillStyle = "#f4f4ef";
+      ctx.fillRect(2, 50, 18, 8);
+      ctx.fillRect(33, 50, 18, 8);
+      ctx.fillStyle = "rgba(127,255,100,0.32)";
+      ctx.fillRect(44, 24, 8, 16);
+      ctx.restore();
+    }
+
+    function drawObstacle(obstacle) {
+      ctx.fillStyle = "rgba(127,255,100,0.18)";
+      ctx.fillRect(obstacle.x - 5, obstacle.y - 5, obstacle.width + 10, obstacle.height + 10);
+      ctx.fillStyle = "#0d0d10";
+      ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+      ctx.strokeStyle = obstacle.hue;
+      ctx.lineWidth = 3;
+      ctx.strokeRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+      ctx.fillStyle = obstacle.hue;
+      ctx.fillRect(obstacle.x + 8, obstacle.y + 10, obstacle.width - 16, 6);
+      ctx.fillRect(obstacle.x + 8, obstacle.y + obstacle.height - 16, obstacle.width - 16, 6);
+    }
+
+    function collide(a, b) {
+      return (
+        a.x + 8 < b.x + b.width &&
+        a.x + a.width - 8 > b.x &&
+        a.y + 8 < b.y + b.height &&
+        a.y + a.height - 4 > b.y
+      );
+    }
+
+    function update() {
+      if (!state.running) return;
+
+      state.time += 1;
+      state.score = Math.floor(state.time / 4);
+      state.speed = Math.min(13, 6 + state.score / 180);
+      scoreNode.textContent = state.score;
+
+      player.vy += 0.82;
+      player.y += player.vy;
+      if (player.y >= state.ground - player.height) {
+        player.y = state.ground - player.height;
+        player.vy = 0;
+        player.onGround = true;
+      }
+
+      if (state.time % Math.max(48, Math.floor(112 - state.speed * 5)) === 0) {
+        spawnObstacle();
+      }
+
+      state.obstacles.forEach((obstacle) => {
+        obstacle.x -= state.speed;
+        if (collide(player, obstacle)) endGame();
+      });
+      state.obstacles = state.obstacles.filter((obstacle) => obstacle.x + obstacle.width > -40);
+
+      state.particles.forEach((particle) => {
+        particle.x += particle.vx;
+        particle.y += particle.vy;
+        particle.vy += 0.12;
+        particle.life -= 1;
+      });
+      state.particles = state.particles.filter((particle) => particle.life > 0);
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.strokeStyle = "rgba(127,255,100,0.18)";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, state.ground + 0.5);
+      ctx.lineTo(canvas.width, state.ground + 0.5);
+      ctx.stroke();
+
+      ctx.fillStyle = "rgba(127,255,100,0.12)";
+      for (let i = 0; i < 34; i += 1) {
+        const x = (i * 92 - (state.time * state.speed * 0.35) % 92);
+        ctx.fillRect(x, state.ground + 18, 38, 2);
+      }
+
+      state.particles.forEach((particle) => {
+        ctx.globalAlpha = Math.max(0, particle.life / 34);
+        ctx.fillStyle = "#7fff64";
+        ctx.fillRect(particle.x, particle.y, 4, 4);
+        ctx.globalAlpha = 1;
+      });
+
+      drawPlayer();
+      state.obstacles.forEach(drawObstacle);
+
+      if (state.ended) {
+        ctx.fillStyle = "rgba(13,13,16,0.42)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    function loop() {
+      update();
+      draw();
+      requestAnimationFrame(loop);
+    }
+
+    window.addEventListener("keydown", (event) => {
+      if (event.code === "Space" || event.code === "ArrowUp") {
+        event.preventDefault();
+        jump();
+      }
+    });
+
+    canvas.addEventListener("pointerdown", jump);
+    restartButton.addEventListener("click", resetGame);
+    loop();
+  </script>
+</body>
+</html>

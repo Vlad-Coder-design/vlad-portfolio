@@ -840,7 +840,7 @@
     <nav class="nav container" aria-label="Основна навігація">
       <div class="brand-actions">
         <a class="logo" href="index.html">vlad<span>.dev</span></a>
-        <a class="donate-link magnet-link" href="https://send.monobank.ua/jar/7gPgzAQqky" target="_blank" rel="noopener noreferrer" data-magnet><span>донат</span></a>
+        <a class="donate-link magnet-link" href="https://send.monobank.ua/jar/7gPgzAQqky" target="_blank" rel="noopener noreferrer" data-magnet><span>На чай</span></a>
       </div>
       <div class="page-switcher header-page-switcher" aria-label="Перемикач сторінок">
         <a class="pill-page cursor-target" href="index.html" aria-label="Відкрити першу сторінку">
@@ -1283,6 +1283,13 @@
     }
 
     initMagnetLinks();
+  </script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("sw.js").catch(() => {});
+      });
+    }
   </script>
 </body>
 </html>
