@@ -286,6 +286,8 @@
       position: relative;
       min-height: 270px;
       padding: 26px;
+      display: flex;
+      flex-direction: column;
       border: 1px solid var(--line);
       background: linear-gradient(145deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.012));
       overflow: hidden;
@@ -372,9 +374,9 @@
     }
 
     .project-link {
-      position: absolute;
-      left: 26px;
-      bottom: 24px;
+      width: max-content;
+      margin-top: auto;
+      padding-top: 26px;
       display: inline-flex;
       align-items: center;
       gap: 9px;
@@ -384,6 +386,16 @@
       font-weight: 700;
       text-transform: uppercase;
       transition: color 180ms ease, transform 180ms ease;
+    }
+
+    .project-soon {
+      margin-top: auto;
+      padding-top: 26px;
+      color: rgba(127, 255, 100, 0.55);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
     }
 
     .project-link::after {
@@ -991,19 +1003,7 @@
     <section class="blocks-section" aria-label="Усі проєкти">
       <div class="container blocks-grid">
         <article class="placeholder cursor-target">
-          <span class="project-number">01 / PORTFOLIO</span>
-          <h2 class="project-title">Мій перший сайт</h2>
-          <p class="project-description">Моє портфоліо з першими сторінками, ефектами, офлайн-іграми та експериментами з HTML, CSS і JavaScript.</p>
-          <ul class="project-tags" aria-label="Технології">
-            <li>HTML</li>
-            <li>CSS</li>
-            <li>JS</li>
-          </ul>
-          <a class="project-link cursor-target" href="index.html">Відкрити</a>
-        </article>
-
-        <article class="placeholder cursor-target">
-          <span class="project-number">02 / LAW</span>
+          <span class="project-number">01 / LAW</span>
           <h2 class="project-title">Сайт юристки</h2>
           <p class="project-description">Акуратний сайт для юридичних послуг із чистою структурою, спокійним стилем і зручними блоками для клієнтів.</p>
           <ul class="project-tags" aria-label="Технології">
@@ -1015,7 +1015,7 @@
         </article>
 
         <article class="placeholder cursor-target">
-          <span class="project-number">03 / GAME</span>
+          <span class="project-number">02 / GAME</span>
           <h2 class="project-title">Словограй</h2>
           <p class="project-description">Мінігра на JavaScript, у якій треба вгадувати слова, тренувати уважність і грати прямо в браузері.</p>
           <ul class="project-tags" aria-label="Технології">
@@ -1027,7 +1027,7 @@
         </article>
 
         <article class="placeholder cursor-target">
-          <span class="project-number">04 / CEILINGS</span>
+          <span class="project-number">03 / CEILINGS</span>
           <h2 class="project-title">Stanislav Ceilings</h2>
           <p class="project-description">Сайт для послуг із натяжних стель: презентація робіт, зрозумілий шлях для клієнта і швидкий перехід до контакту.</p>
           <ul class="project-tags" aria-label="Технології">
@@ -1036,6 +1036,18 @@
             <li>Service</li>
           </ul>
           <a class="project-link cursor-target" href="https://stanislav-ceilings-website.vercel.app/" target="_blank" rel="noopener">Відкрити</a>
+        </article>
+
+        <article class="placeholder cursor-target">
+          <span class="project-number">04 / SOON</span>
+          <h2 class="project-title">Наступний проєкт</h2>
+          <p class="project-description">Тут скоро зʼявиться ще одна робота. Місце залишено для нового сайту або гри.</p>
+          <ul class="project-tags" aria-label="Технології">
+            <li>Coming</li>
+            <li>Soon</li>
+            <li>Idea</li>
+          </ul>
+          <p class="project-soon">скоро</p>
         </article>
       </div>
     </section>
@@ -1099,18 +1111,19 @@
         empty: "ПРОЄКТ",
         footer: "// projects in motion",
         projectTitles: [
-          "Мій перший сайт",
           "Сайт юристки",
           "Словограй",
-          "Stanislav Ceilings"
+          "Stanislav Ceilings",
+          "Наступний проєкт"
         ],
         projectDescriptions: [
-          "Моє портфоліо з першими сторінками, ефектами, офлайн-іграми та експериментами з HTML, CSS і JavaScript.",
           "Акуратний сайт для юридичних послуг із чистою структурою, спокійним стилем і зручними блоками для клієнтів.",
           "Мінігра на JavaScript, у якій треба вгадувати слова, тренувати уважність і грати прямо в браузері.",
-          "Сайт для послуг із натяжних стель: презентація робіт, зрозумілий шлях для клієнта і швидкий перехід до контакту."
+          "Сайт для послуг із натяжних стель: презентація робіт, зрозумілий шлях для клієнта і швидкий перехід до контакту.",
+          "Тут скоро зʼявиться ще одна робота. Місце залишено для нового сайту або гри."
         ],
-        projectActions: ["Відкрити", "Відкрити", "Грати", "Відкрити"]
+        projectActions: ["Відкрити", "Грати", "Відкрити"],
+        projectSoon: "скоро"
       },
       en: {
         title: "Vlad.dev — page 02",
@@ -1126,18 +1139,19 @@
         empty: "PROJECT",
         footer: "// projects in motion",
         projectTitles: [
-          "My first website",
           "Lawyer website",
           "Slovohrai",
-          "Stanislav Ceilings"
+          "Stanislav Ceilings",
+          "Next project"
         ],
         projectDescriptions: [
-          "My portfolio with first pages, effects, offline mini-games, and HTML, CSS, and JavaScript experiments.",
           "A polished website for legal services with a clean structure, calm style, and useful client sections.",
           "A JavaScript mini-game where you guess words, train attention, and play directly in the browser.",
-          "A website for stretch-ceiling services with work presentation, a clear client path, and quick contact access."
+          "A website for stretch-ceiling services with work presentation, a clear client path, and quick contact access.",
+          "Another project will appear here soon. This place is saved for a new website or game."
         ],
-        projectActions: ["Open", "Open", "Play", "Open"]
+        projectActions: ["Open", "Play", "Open"],
+        projectSoon: "soon"
       }
     };
 
@@ -1169,6 +1183,9 @@
       });
       document.querySelectorAll(".project-link").forEach((link, index) => {
         link.textContent = copy.projectActions[index] || link.textContent;
+      });
+      document.querySelectorAll(".project-soon").forEach((label) => {
+        label.textContent = copy.projectSoon;
       });
       document.querySelector(".footer-phrase").textContent = copy.footer;
 
