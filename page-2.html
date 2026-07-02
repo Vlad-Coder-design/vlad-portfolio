@@ -318,6 +318,91 @@
       font-size: 0.7rem;
     }
 
+    .project-number {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .project-number::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: currentColor;
+      box-shadow: 0 0 12px rgba(127, 255, 100, 0.65);
+    }
+
+    .project-title {
+      margin-top: 76px;
+      margin-bottom: 12px;
+      font-size: clamp(1.45rem, 3.2vw, 2.7rem);
+      line-height: 0.98;
+      letter-spacing: -0.06em;
+    }
+
+    .project-description {
+      max-width: 520px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .project-tags {
+      margin-top: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      list-style: none;
+    }
+
+    .project-tags li {
+      padding: 7px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 999px;
+      color: rgba(244, 244, 239, 0.74);
+      background: rgba(255, 255, 255, 0.028);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.64rem;
+      text-transform: uppercase;
+    }
+
+    .project-link {
+      position: absolute;
+      left: 26px;
+      bottom: 24px;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--accent);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      transition: color 180ms ease, transform 180ms ease;
+    }
+
+    .project-link::after {
+      content: "↗";
+      font-size: 0.82rem;
+      transition: transform 180ms ease;
+    }
+
+    .project-link:hover,
+    .project-link:focus-visible {
+      color: var(--text);
+      transform: translateX(3px);
+    }
+
+    .project-link:hover::after,
+    .project-link:focus-visible::after {
+      transform: translate(2px, -2px);
+    }
+
     .placeholder::after {
       content: "";
       position: absolute;
@@ -898,17 +983,60 @@
     <section class="intro" id="particles-section">
       <canvas class="particles-canvas" aria-hidden="true"></canvas>
       <div class="container">
-        <p class="section-label">02 / NEXT PAGE</p>
-        <h1>Нова<br><span>сторінка</span></h1>
+        <p class="section-label">02 / PROJECTS</p>
+        <h1>Усі<br><span>проєкти</span></h1>
       </div>
     </section>
 
-    <section class="blocks-section" aria-label="Майбутні блоки">
+    <section class="blocks-section" aria-label="Усі проєкти">
       <div class="container blocks-grid">
-        <article class="placeholder cursor-target"><span class="placeholder-number">01 / EMPTY</span></article>
-        <article class="placeholder cursor-target"><span class="placeholder-number">02 / EMPTY</span></article>
-        <article class="placeholder cursor-target"><span class="placeholder-number">03 / EMPTY</span></article>
-        <article class="placeholder cursor-target"><span class="placeholder-number">04 / EMPTY</span></article>
+        <article class="placeholder cursor-target">
+          <span class="project-number">01 / PORTFOLIO</span>
+          <h2 class="project-title">Мій перший сайт</h2>
+          <p class="project-description">Моє портфоліо з першими сторінками, ефектами, офлайн-іграми та експериментами з HTML, CSS і JavaScript.</p>
+          <ul class="project-tags" aria-label="Технології">
+            <li>HTML</li>
+            <li>CSS</li>
+            <li>JS</li>
+          </ul>
+          <a class="project-link cursor-target" href="index.html">Відкрити</a>
+        </article>
+
+        <article class="placeholder cursor-target">
+          <span class="project-number">02 / LAW</span>
+          <h2 class="project-title">Сайт юристки</h2>
+          <p class="project-description">Акуратний сайт для юридичних послуг із чистою структурою, спокійним стилем і зручними блоками для клієнтів.</p>
+          <ul class="project-tags" aria-label="Технології">
+            <li>Vercel</li>
+            <li>Business</li>
+            <li>Web</li>
+          </ul>
+          <a class="project-link cursor-target" href="https://liudmyla-lawyer-website.vercel.app" target="_blank" rel="noopener">Відкрити</a>
+        </article>
+
+        <article class="placeholder cursor-target">
+          <span class="project-number">03 / GAME</span>
+          <h2 class="project-title">Словограй</h2>
+          <p class="project-description">Мінігра на JavaScript, у якій треба вгадувати слова, тренувати уважність і грати прямо в браузері.</p>
+          <ul class="project-tags" aria-label="Технології">
+            <li>JavaScript</li>
+            <li>Game</li>
+            <li>GitHub Pages</li>
+          </ul>
+          <a class="project-link cursor-target" href="https://vlad-coder-design.github.io/slovohrai/" target="_blank" rel="noopener">Грати</a>
+        </article>
+
+        <article class="placeholder cursor-target">
+          <span class="project-number">04 / CEILINGS</span>
+          <h2 class="project-title">Stanislav Ceilings</h2>
+          <p class="project-description">Сайт для послуг із натяжних стель: презентація робіт, зрозумілий шлях для клієнта і швидкий перехід до контакту.</p>
+          <ul class="project-tags" aria-label="Технології">
+            <li>Vercel</li>
+            <li>Landing</li>
+            <li>Service</li>
+          </ul>
+          <a class="project-link cursor-target" href="https://stanislav-ceilings-website.vercel.app/" target="_blank" rel="noopener">Відкрити</a>
+        </article>
       </div>
     </section>
   </main>
@@ -965,11 +1093,24 @@
         firstPageLabel: "Відкрити першу сторінку",
         languageLabel: "Перемикач мови",
         back: "← ./назад",
-        sectionLabel: "02 / НАСТУПНА СТОРІНКА",
-        heading: "Нова<br><span>сторінка</span>",
-        blocksLabel: "Майбутні блоки",
-        empty: "ПОРОЖНЬО",
-        footer: "// простір для нових ідей"
+        sectionLabel: "02 / ПРОЄКТИ",
+        heading: "Усі<br><span>проєкти</span>",
+        blocksLabel: "Усі проєкти",
+        empty: "ПРОЄКТ",
+        footer: "// projects in motion",
+        projectTitles: [
+          "Мій перший сайт",
+          "Сайт юристки",
+          "Словограй",
+          "Stanislav Ceilings"
+        ],
+        projectDescriptions: [
+          "Моє портфоліо з першими сторінками, ефектами, офлайн-іграми та експериментами з HTML, CSS і JavaScript.",
+          "Акуратний сайт для юридичних послуг із чистою структурою, спокійним стилем і зручними блоками для клієнтів.",
+          "Мінігра на JavaScript, у якій треба вгадувати слова, тренувати уважність і грати прямо в браузері.",
+          "Сайт для послуг із натяжних стель: презентація робіт, зрозумілий шлях для клієнта і швидкий перехід до контакту."
+        ],
+        projectActions: ["Відкрити", "Відкрити", "Грати", "Відкрити"]
       },
       en: {
         title: "Vlad.dev — page 02",
@@ -979,11 +1120,24 @@
         firstPageLabel: "Open the first page",
         languageLabel: "Language switcher",
         back: "← ./back",
-        sectionLabel: "02 / NEXT PAGE",
-        heading: "New<br><span>page</span>",
-        blocksLabel: "Future blocks",
-        empty: "EMPTY",
-        footer: "// space for new ideas"
+        sectionLabel: "02 / PROJECTS",
+        heading: "All<br><span>projects</span>",
+        blocksLabel: "All projects",
+        empty: "PROJECT",
+        footer: "// projects in motion",
+        projectTitles: [
+          "My first website",
+          "Lawyer website",
+          "Slovohrai",
+          "Stanislav Ceilings"
+        ],
+        projectDescriptions: [
+          "My portfolio with first pages, effects, offline mini-games, and HTML, CSS, and JavaScript experiments.",
+          "A polished website for legal services with a clean structure, calm style, and useful client sections.",
+          "A JavaScript mini-game where you guess words, train attention, and play directly in the browser.",
+          "A website for stretch-ceiling services with work presentation, a clear client path, and quick contact access."
+        ],
+        projectActions: ["Open", "Open", "Play", "Open"]
       }
     };
 
@@ -1006,6 +1160,15 @@
       document.querySelector(".blocks-section").setAttribute("aria-label", copy.blocksLabel);
       document.querySelectorAll(".placeholder-number").forEach((label, index) => {
         label.textContent = `${String(index + 1).padStart(2, "0")} / ${copy.empty}`;
+      });
+      document.querySelectorAll(".project-title").forEach((title, index) => {
+        title.textContent = copy.projectTitles[index] || title.textContent;
+      });
+      document.querySelectorAll(".project-description").forEach((description, index) => {
+        description.textContent = copy.projectDescriptions[index] || description.textContent;
+      });
+      document.querySelectorAll(".project-link").forEach((link, index) => {
+        link.textContent = copy.projectActions[index] || link.textContent;
       });
       document.querySelector(".footer-phrase").textContent = copy.footer;
 
