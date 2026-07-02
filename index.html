@@ -170,6 +170,16 @@
       transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
     }
 
+    .offline-games-link {
+      align-items: center;
+      justify-content: center;
+    }
+
+    .offline-games-svg {
+      width: 128px;
+      height: 18px;
+    }
+
     .donate-link:hover,
     .donate-link:focus-visible {
       color: var(--accent);
@@ -210,11 +220,11 @@
       position: relative;
       padding: 0;
       overflow: visible;
-      cursor: none;
+      cursor: pointer;
     }
 
     .effects-orbit-link * {
-      cursor: none;
+      cursor: pointer;
     }
 
     .effects-orbit-link::before,
@@ -229,6 +239,11 @@
       overflow: visible;
     }
 
+    .effects-svg.offline-games-svg {
+      width: 128px;
+      height: 18px;
+    }
+
     .effects-fill,
     .effects-stroke {
       font-family: "JetBrains Mono", monospace;
@@ -236,6 +251,12 @@
       font-weight: 700;
       letter-spacing: 0;
       dominant-baseline: middle;
+    }
+
+    .effects-svg.offline-games-svg .effects-fill,
+    .effects-svg.offline-games-svg .effects-stroke {
+      font-size: 11px;
+      font-weight: 700;
     }
 
     .effects-fill {
@@ -1245,12 +1266,10 @@
       <div class="brand-actions">
         <a class="logo" href="#top" aria-label="На головну">vlad<span>.dev</span></a>
         <a class="donate-link magnet-link" href="https://send.monobank.ua/jar/7gPgzAQqky" target="_blank" rel="noopener noreferrer" data-magnet><span>На чай</span></a>
+        <a class="offline-games-link effects-orbit-link" href="offline.html" aria-label="Відкрити офлайн міні ігри"><svg class="effects-svg offline-games-svg" viewBox="0 0 128 18" aria-hidden="true"><text class="effects-fill" x="0" y="9">Офлайн міні ігри</text><text class="effects-stroke" x="0" y="9">Офлайн міні ігри</text></svg></a>
       </div>
       <button class="menu-toggle" type="button" aria-label="Відкрити меню" aria-expanded="false">=</button>
       <ul class="nav-links">
-        <li><a href="#about">./about</a></li>
-        <li><a href="#projects">./projects</a></li>
-        <li><a href="#goals">./goals</a></li>
         <li><a class="magnet-link effects-orbit-link" href="page-4.html" data-magnet aria-label="./effects"><svg class="effects-svg" viewBox="0 0 74 18" aria-hidden="true"><text class="effects-fill" x="0" y="9">./effects</text><text class="effects-stroke" x="0" y="9">./effects</text></svg></a></li>
         <li class="page-switcher header-page-switcher" aria-label="Перемикач сторінок">
           <span class="pill-page pill-page-current" aria-current="page">

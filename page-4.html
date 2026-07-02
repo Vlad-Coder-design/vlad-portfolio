@@ -202,6 +202,16 @@
       transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
     }
 
+    .offline-games-link {
+      align-items: center;
+      justify-content: center;
+    }
+
+    .offline-games-svg {
+      width: 128px;
+      height: 18px;
+    }
+
     .donate-link:hover,
     .donate-link:focus-visible {
       color: var(--accent);
@@ -286,14 +296,9 @@
       position: relative;
       padding: 0;
       overflow: visible;
-      cursor: none;
+      cursor: pointer;
     }
 
-    .effects-orbit-link * {
-      cursor: none;
-    }
-
-    .effects-orbit-link,
     .effects-orbit-link * {
       cursor: pointer;
     }
@@ -310,6 +315,11 @@
       overflow: visible;
     }
 
+    .effects-svg.offline-games-svg {
+      width: 128px;
+      height: 18px;
+    }
+
     .effects-fill,
     .effects-stroke {
       font-family: "JetBrains Mono", monospace;
@@ -317,6 +327,12 @@
       font-weight: 700;
       letter-spacing: 0;
       dominant-baseline: middle;
+    }
+
+    .effects-svg.offline-games-svg .effects-fill,
+    .effects-svg.offline-games-svg .effects-stroke {
+      font-size: 11px;
+      font-weight: 700;
     }
 
     .effects-fill {
@@ -1656,6 +1672,7 @@
       <div class="brand-actions">
         <a class="logo" href="index.html" aria-label="На головну">vlad<span>.dev</span></a>
         <a class="donate-link magnet-link" href="https://send.monobank.ua/jar/7gPgzAQqky" target="_blank" rel="noopener noreferrer" data-magnet><span>На чай</span></a>
+        <a class="offline-games-link effects-orbit-link" href="offline.html" aria-label="Відкрити офлайн міні ігри"><svg class="effects-svg offline-games-svg" viewBox="0 0 128 18" aria-hidden="true"><text class="effects-fill" x="0" y="9">Офлайн міні ігри</text><text class="effects-stroke" x="0" y="9">Офлайн міні ігри</text></svg></a>
       </div>
       <div class="page-switcher header-page-switcher" aria-label="Перемикач сторінок">
         <a class="pill-page" href="index.html" aria-label="Відкрити першу сторінку">01</a>
