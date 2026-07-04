@@ -1142,10 +1142,14 @@
             <li>Email</li>
             <li>Telegram</li>
           </ul>
-          <form class="contact-form" id="projectContactForm">
-            <input class="contact-field" id="contactName" name="name" type="text" autocomplete="name" placeholder="Ваше ім'я" required>
-            <input class="contact-field" id="contactPhone" name="phone" type="tel" autocomplete="tel" placeholder="Номер телефону" required>
-            <textarea class="contact-field" id="contactQuestion" name="question" placeholder="Ваше питання" required></textarea>
+          <form class="contact-form" id="projectContactForm" action="https://formsubmit.co/dobjanskiy51@gmail.com" method="POST">
+            <input type="hidden" name="_subject" id="contactSubject" value="Новий запит на сайт">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_next" value="https://vlad-portfolio-gold.vercel.app/page-2.html">
+            <input class="contact-field" id="contactName" name="Ім'я" type="text" autocomplete="name" placeholder="Ваше ім'я" required>
+            <input class="contact-field" id="contactPhone" name="Телефон" type="tel" autocomplete="tel" placeholder="Номер телефону" required>
+            <textarea class="contact-field" id="contactQuestion" name="Питання" placeholder="Ваше питання" required></textarea>
             <div class="contact-actions">
               <button class="contact-submit" type="submit">Написати на пошту</button>
               <a class="telegram-link" href="https://t.me/bjdjendjsjdn" target="_blank" rel="noopener noreferrer">Мій телеграм</a>
@@ -1304,6 +1308,7 @@
       document.getElementById("contactQuestion").setAttribute("placeholder", copy.contactQuestion);
       document.querySelector(".contact-submit").textContent = copy.contactSubmit;
       document.querySelector(".telegram-link").textContent = copy.contactTelegram;
+      document.getElementById("contactSubject").value = copy.emailSubject;
       document.querySelector(".footer-phrase").textContent = copy.footer;
 
       languageButtons.forEach((button) => {
@@ -1319,24 +1324,6 @@
     });
 
     setPageTwoLanguage(localStorage.getItem("vlad-language") === "en" ? "en" : "uk");
-
-    document.getElementById("projectContactForm").addEventListener("submit", (event) => {
-      event.preventDefault();
-      const language = localStorage.getItem("vlad-language") === "en" ? "en" : "uk";
-      const copy = translations[language];
-      const name = document.getElementById("contactName").value.trim();
-      const phone = document.getElementById("contactPhone").value.trim();
-      const question = document.getElementById("contactQuestion").value.trim();
-      const body = [
-        copy.emailBodyIntro,
-        "",
-        `Name: ${name}`,
-        `Phone: ${phone}`,
-        `Question: ${question}`
-      ].join("\n");
-
-      window.location.href = `mailto:dobjanskiy51@gmail.com?subject=${encodeURIComponent(copy.emailSubject)}&body=${encodeURIComponent(body)}`;
-    });
 
     document.querySelectorAll(".header-page-switcher a.pill-page").forEach((link) => {
       link.addEventListener("click", (event) => {
