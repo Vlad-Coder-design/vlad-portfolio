@@ -775,6 +775,7 @@
     @media (max-width: 560px) {
       .container {
         width: min(calc(100% - 28px), var(--max-width));
+        max-width: calc(100% - 28px);
       }
 
       .hero {
@@ -782,7 +783,13 @@
       }
 
       .hero-title {
-        font-size: clamp(3.5rem, 20vw, 6rem);
+        max-width: 100%;
+        font-size: clamp(3rem, 16vw, 4.7rem);
+        letter-spacing: -0.075em;
+      }
+
+      .hero-title span {
+        max-width: 100%;
       }
 
       .hero-bottom {

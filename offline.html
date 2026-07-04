@@ -55,6 +55,11 @@
       font: inherit;
     }
 
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
     .offline-shell {
       position: relative;
       z-index: 1;
@@ -88,6 +93,29 @@
     .brand span,
     .status {
       color: var(--accent);
+    }
+
+    .site-exit {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      padding: 0 14px;
+      border: 1px solid rgba(127, 255, 100, 0.44);
+      border-radius: 999px;
+      color: var(--accent);
+      background: rgba(127, 255, 100, 0.07);
+      box-shadow: 0 0 22px rgba(127, 255, 100, 0.08);
+      font-weight: 800;
+      transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
+    }
+
+    .site-exit:hover,
+    .site-exit:focus-visible {
+      border-color: rgba(127, 255, 100, 0.88);
+      background: rgba(127, 255, 100, 0.14);
+      outline: none;
+      transform: translateY(-1px);
     }
 
     .game-stage {
@@ -306,6 +334,12 @@
         font-size: 0.84rem;
       }
 
+      .site-exit {
+        min-height: 34px;
+        padding: 0 10px;
+        font-size: 0.58rem;
+      }
+
       .game-stage {
         min-height: calc(100dvh - 92px);
       }
@@ -368,6 +402,7 @@
   <main class="offline-shell">
     <header class="topbar">
       <div class="brand">vlad<span>.dev</span></div>
+      <a class="site-exit" href="index.html" aria-label="Повернутися на сайт">На сайт</a>
       <div class="status" id="modeLabel">offline arcade</div>
     </header>
 
